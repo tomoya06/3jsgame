@@ -52,30 +52,26 @@ scene.add(shadowLight);
 /** 灯光 */
 
 const planeLoader = new GLTFLoader();
-let mixer: THREE.AnimationMixer;
-
-planeLoader.load(
-  "src/assets/models/cartoon_plane/scene.gltf",
-  (planeModel) => {
-    scene.add(planeModel.scene);
-
-    const wheel = planeModel.scene.children[0];
-    mixer = new THREE.AnimationMixer(wheel);
-    mixer.clipAction(planeModel.animations[0]).play();
-
-    animate();
-  },
-  undefined,
-  (error) => {
-    console.error(error);
-  }
+const planeModel = await planeLoader.loadAsync(
+  "src/assets/models/cartoon_plane/scene.gltf"
 );
+
+planeModel.scene.scale.set(0.5, 0.5, 0.5);
+scene.add(planeModel.scene);
+
+const wheel = planeModel.scene.children[0];
+const mixer = new THREE.AnimationMixer(wheel);
+mixer.clipAction(planeModel.animations[0]).play();
+
+animate();
 
 function animate() {
   requestAnimationFrame(animate);
 
   const delta = clock.getDelta();
   mixer.update(delta);
+
+  planeModel.scene.rotation.y += 0.01;
 
   renderer.render(scene, camera);
 }

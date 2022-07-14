@@ -1,0 +1,11 @@
+Model Information:
+* title:	Cloud Low Poly #01
+* source:	https://sketchfab.com/3d-models/cloud-low-poly-01-1f7e39b63dea47bcaf6f888f34b02a80
+* author:	Game Green (https://sketchfab.com/gamegreen)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Cloud Low Poly #01" (https://sketchfab.com/3d-models/cloud-low-poly-01-1f7e39b63dea47bcaf6f888f34b02a80) by Game Green (https://sketchfab.com/gamegreen) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
