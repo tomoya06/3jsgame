@@ -1,4 +1,4 @@
-import THREE from "three";
+import THREE, { BufferGeometry } from "three";
 
 // @see https://codepen.io/dennishadley/pen/KEXVWm?editors=0010
 const getRandomInRange = function (min: number, max: number) {
@@ -8,7 +8,7 @@ const getRandomInRange = function (min: number, max: number) {
 const createTuft = function (
   baseCloudSize: number,
   tuftSize: number,
-  farSide: number
+  farSide: boolean
 ) {
   const calcTuftXPosition = function (cloudR: number, tuftR: number) {
     const minOffset = tuftR * 0.4;
@@ -44,20 +44,20 @@ const map = (
 ) => ((emax - emin) * (val - smin)) / (smax - smin) + emin;
 
 export default function makeCloud() {
-  const jitter = (geo, per) =>
-    geo.vertices.forEach((v) => {
-      v.x += map(Math.random(), 0, 1, -per, per);
-      v.y += map(Math.random(), 0, 1, -per, per);
-      v.z += map(Math.random(), 0, 1, -per, per);
-    });
-  const chopBottom = (geo, bottom) =>
-    geo.vertices.forEach((v) => (v.y = Math.max(v.y, bottom)));
+  // const jitter = (geo: BufferGeometry, per: number) =>
+  //   geo.vertices.forEach((v) => {
+  //     v.x += map(Math.random(), 0, 1, -per, per);
+  //     v.y += map(Math.random(), 0, 1, -per, per);
+  //     v.z += map(Math.random(), 0, 1, -per, per);
+  //   });
+  // const chopBottom = (geo, bottom: number) =>
+  //   geo.vertices.forEach((v) => (v.y = Math.max(v.y, bottom)));
   const numTufts = 2;
 
   const minCloudSize = 1.2;
   const maxCloudSize = 2.2;
 
-  const geo = new THREE.Geometry();
+  const geo = new THREE.BufferGeometry();
 
   const baseCloudSize = getRandomInRange(minCloudSize, maxCloudSize);
   const baseCloud = new THREE.SphereGeometry(baseCloudSize, 10, 10);
@@ -67,19 +67,18 @@ export default function makeCloud() {
 
   for (var i = 0; i < numTufts; i++) {
     const tuftSize = getRandomInRange(minCloudSize, baseCloudSize * 0.6);
-    const tuft = createTuft(baseCloudSize, tuftSize, i % 2 == 0 ? false : true);
+    const tuft = createTuft(baseCloudSize, tuftSize, i % 2 === 0 ? false : true);
     geo.merge(tuft);
   }
 
-  jitter(geo, 0.2);
-  chopBottom(geo, -0.4);
-  geo.computeFlatVertexNormals();
+  // jitter(geo, 0.2);
+  // chopBottom(geo, -0.4);
+  // geo.computeFlatVertexNormals();
 
   return new THREE.Mesh(
     geo,
     new THREE.MeshLambertMaterial({
-      color: "white",
-      flatShading: true,
+      color: 0xffffff,
     })
   );
 }
