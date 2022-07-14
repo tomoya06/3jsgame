@@ -1,0 +1,149 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v5.0.5eb040c7)"
+    },
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 273,
+            "type": "VEC3",
+            "max": [
+                2.364835739135742,
+                1.2811148166656495,
+                1.3206504583358765
+            ],
+            "min": [
+                -2.3554747104644777,
+                -1.2811146974563599,
+                -1.245394229888916
+            ]
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 273,
+            "type": "VEC3",
+            "max": [
+                0.9031039476394653,
+                0.9768384695053101,
+                0.9594232439994812
+            ],
+            "min": [
+                -0.9031038880348206,
+                -0.9768384695053101,
+                -0.9594235420227051
+            ]
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 273,
+            "type": "SCALAR",
+            "max": [
+                272
+            ],
+            "min": [
+                0
+            ]
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 7644,
+            "uri": "result.bin"
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 3276,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 3276,
+            "byteLength": 3276,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 6552,
+            "byteLength": 1092,
+            "target": 34963
+        }
+    ],
+    "materials": [
+        {
+            "name": "DefaultMaterial",
+            "pbrMetallicRoughness": {
+                "baseColorFactor": [
+                    0.800000011920929,
+                    0.800000011920929,
+                    0.800000011920929,
+                    1.0
+                ],
+                "metallicFactor": 0.0
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "name": "Icosphere.044",
+            "primitives": [
+                {
+                    "mode": 4,
+                    "material": 0,
+                    "indices": 2,
+                    "attributes": {
+                        "POSITION": 0,
+                        "NORMAL": 1
+                    }
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "name": "RootNode",
+            "children": [
+                1
+            ]
+        },
+        {
+            "name": "Cloud_1",
+            "matrix": [
+                77.49482727050781,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.000012625509953068104,
+                -77.49482727050781,
+                0.0,
+                0.0,
+                77.49482727050781,
+                -0.000012625509953068104,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "mesh": 0
+        }
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "scene": 0
+}

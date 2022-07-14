@@ -12,9 +12,9 @@ const camera = new THREE.PerspectiveCamera(
   1,
   1000
 );
-camera.position.z = 5;
-camera.position.y = 3;
-camera.position.x = -5;
+camera.position.z = 10;
+camera.position.y = 6;
+camera.position.x = -10;
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -28,25 +28,83 @@ scene.add(gridHelper);
 const axesHelper = new THREE.AxesHelper(5);
 scene.add(axesHelper);
 const controls = new OrbitControls(camera, renderer.domElement);
+controls.object.position.set(
+  camera.position.x,
+  camera.position.y,
+  camera.position.z
+);
 
 /** 灯光 */
-const light = new THREE.AmbientLight(0xffffff); // soft white light
+const light = new THREE.AmbientLight(0xffffff);
 scene.add(light);
+
+const directionalLight = new THREE.DirectionalLight(0xff8c19);
+directionalLight.position.set(0, 0, 1);
+scene.add(directionalLight);
 /** 灯光 */
 
 /* 加载模型 */
 // 飞机
-const planeLoader = new GLTFLoader();
-const planeModel = await planeLoader.loadAsync(
+const planeModel = await new GLTFLoader().loadAsync(
   "src/assets/models/cartoon_plane/scene.gltf"
 );
 
-planeModel.scene.scale.set(2, 2, 2);
+const planeSize = 1;
+planeModel.scene.scale.set(planeSize, planeSize, planeSize);
 scene.add(planeModel.scene);
 
 const wheel = planeModel.scene.children[0];
 const mixer = new THREE.AnimationMixer(wheel);
 mixer.clipAction(planeModel.animations[0]).play();
+
+// 飞机动画
+function animatePlane() {
+  const delta = clock.getDelta();
+  mixer.update(delta);
+}
+
+// 云
+const NumsOfCloudModels = 1;
+const cloudModelUrls = Array(NumsOfCloudModels)
+  .fill(0)
+  .map((_, idx) => `src/assets/models/clouds/cloud${idx + 1}/scene.gltf`);
+
+// const cloudMetrial = new THREE.MeshStandardMaterial({ color: 0xffffff });
+const cloudModels = await Promise.all(
+  cloudModelUrls.map(async (url) => {
+    const model = await new GLTFLoader().loadAsync(url);
+    return model;
+  })
+);
+
+const cloudInstances: THREE.Group[] = [];
+const numsOfClouds = 100;
+for (let i = 0; i < numsOfClouds; i++) {
+  createNewCloud();
+}
+
+function createNewCloud() {
+  const pickedIdx = Math.floor(Math.random() * NumsOfCloudModels);
+  const pickedModel = cloudModels[pickedIdx];
+  const newCloud = pickedModel.scene.clone();
+  newCloud.scale.set(1, 1, 1);
+  newCloud.position.set(
+    Math.random() * 10 - 5,
+    1 + Math.random() * 0.2 - 0.1,
+    Math.random() * 100 - 10
+  );
+
+  scene.add(newCloud);
+  cloudInstances.push(newCloud);
+}
+
+// 云层动画
+function animateCloud() {
+  cloudInstances.forEach((cld) => {
+    cld.position.z -= 0.01;
+  });
+}
+
 /* 加载模型 */
 
 animate();
@@ -55,9 +113,8 @@ function animate() {
   requestAnimationFrame(animate);
 
   /** 动画帧更新 */
-  // 飞机
-  const delta = clock.getDelta();
-  mixer.update(delta);
+  animateCloud();
+  animatePlane();
 
   controls.update();
   renderer.render(scene, camera);
