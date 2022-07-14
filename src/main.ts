@@ -23,11 +23,11 @@ document.body.appendChild(renderer.domElement);
 
 /** 辅助器 */
 const gridHelper = new THREE.GridHelper(10, 10);
-scene.add( gridHelper );
+scene.add(gridHelper);
 // 红色代表 X 轴. 绿色代表 Y 轴. 蓝色代表 Z 轴.
-const axesHelper = new THREE.AxesHelper( 5 );
-scene.add( axesHelper );
-const controls = new OrbitControls( camera, renderer.domElement );
+const axesHelper = new THREE.AxesHelper(5);
+scene.add(axesHelper);
+const controls = new OrbitControls(camera, renderer.domElement);
 
 /** 灯光 */
 const light = new THREE.AmbientLight(0xffffff); // soft white light
@@ -41,33 +41,23 @@ const planeModel = await planeLoader.loadAsync(
   "src/assets/models/cartoon_plane/scene.gltf"
 );
 
-planeModel.scene.scale.set(0.5, 0.5, 0.5);
+planeModel.scene.scale.set(2, 2, 2);
 scene.add(planeModel.scene);
 
 const wheel = planeModel.scene.children[0];
 const mixer = new THREE.AnimationMixer(wheel);
 mixer.clipAction(planeModel.animations[0]).play();
-
-// 云
-const cloudLoader = new GLTFLoader();
-const cloudModel = await cloudLoader.loadAsync(
-  "src/assets/models/cloud_low_poly_01/scene.gltf"
-);
-cloudModel.scene.position.set(1, -1, -2);
-// cloudModel.scenes.
-scene.add(cloudModel.scene);
 /* 加载模型 */
-
 
 animate();
 
 function animate() {
   requestAnimationFrame(animate);
 
+  /** 动画帧更新 */
+  // 飞机
   const delta = clock.getDelta();
   mixer.update(delta);
-
-  // planeModel.scene.rotation.y += 0.01;
 
   controls.update();
   renderer.render(scene, camera);
