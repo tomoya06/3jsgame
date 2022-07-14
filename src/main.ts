@@ -67,7 +67,7 @@ function animatePlane() {
 const NumsOfCloudModels = 1;
 const cloudModelUrls = Array(NumsOfCloudModels)
   .fill(0)
-  .map((_, idx) => `src/assets/models/clouds/cloud${idx + 1}/scene.gltf`);
+  .map((_, idx) => `src/assets/models/polyclouds/AnyConv.com__Cloud_${idx+1}.gltf`);
 
 // const cloudMetrial = new THREE.MeshStandardMaterial({ color: 0xffffff });
 const cloudModels = await Promise.all(
