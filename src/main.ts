@@ -2,7 +2,7 @@ import "./style.css";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import makeCloud from "./assets/generate/cloud";
+import makeCloud2 from "./assets/generate/cloud2";
 
 /** 场景 & 相机 */
 const clock = new THREE.Clock();
@@ -14,7 +14,8 @@ const camera = new THREE.PerspectiveCamera(
   1000
 );
 camera.position.z = 10;
-camera.position.y = 6;
+// camera.position.y = 6;
+camera.position.y = 0;
 camera.position.x = -10;
 
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -77,32 +78,21 @@ function animatePlane() {
 }
 
 // 云
-// const NumsOfCloudModels = 1;
-// const cloudModelUrls = Array(NumsOfCloudModels)
-//   .fill(0)
-//   .map((_, idx) => `src/assets/models/polyclouds/AnyConv.com__Cloud_${idx+1}.gltf`);
-
-// // const cloudMetrial = new THREE.MeshStandardMaterial({ color: 0xffffff });
-// const cloudModels = await Promise.all(
-//   cloudModelUrls.map(async (url) => {
-//     const model = await new GLTFLoader().loadAsync(url);
-//     return model;
-//   })
-// );
-
-const cloudInstances: THREE.Mesh[] = [];
-const numsOfClouds = 100;
+const cloudInstances: (THREE.Mesh | THREE.Group)[] = [];
+const numsOfClouds = 1;
 for (let i = 0; i < numsOfClouds; i++) {
   createNewCloud();
 }
 
 function createNewCloud() {
-  const cloud = makeCloud();
+  const cloud = makeCloud2();
 
   const scale = Math.random() * 1.15 + 0.5;
   cloud.position.x = Math.random() * 10 - 5;
-  cloud.position.z = Math.random() * 100 + 1;
+  // cloud.position.z = Math.random() * 100 + 1;
+  cloud.position.z = 0;
   cloud.position.y = Math.random() * 10 - 5;
+  cloud.position.y = 0;
   cloud.rotation.y += Math.random() * 0.002 + 0.001;
   cloud.scale.set(scale, scale, scale);
 
@@ -113,7 +103,7 @@ function createNewCloud() {
 // 云层动画
 function animateCloud() {
   cloudInstances.forEach((cld) => {
-    cld.position.z -= 0.01;
+    cld.position.z -= 0.00;
   });
 }
 
