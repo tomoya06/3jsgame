@@ -19,7 +19,6 @@ export default function makeCloud2() {
       radius: 1.8,
       pos: [0, 0],
       rotate: [80, 60],
-      scale: [1, 1.2, 1.2],
     },
     { radius: 1.1, pos: [-0.6, 2.0], rotate: [0, 0] },
     { radius: 0.6, pos: [-0.8, 3.0], rotate: [40, 70], scale: [0.8, 0.8, 0.8] },
