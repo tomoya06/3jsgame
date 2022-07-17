@@ -2,7 +2,7 @@ import "./style.css";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import makeCloud2 from "./assets/generate/cloud2";
+import makeCloud0 from "./assets/generate/cloud0";
 
 /** 场景 & 相机 */
 const clock = new THREE.Clock();
@@ -14,8 +14,7 @@ const camera = new THREE.PerspectiveCamera(
   1000
 );
 camera.position.z = 10;
-// camera.position.y = 6;
-camera.position.y = 0;
+camera.position.y = 6;
 camera.position.x = -10;
 
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -37,21 +36,14 @@ controls.object.position.set(
 );
 
 /** 灯光 */
-// const light = new THREE.AmbientLight(0xffffff);
-// scene.add(light);
-
-// const directionalLight = new THREE.DirectionalLight(0xff8c19);
-// directionalLight.position.set(0, 0, 1);
-// scene.add(directionalLight);
-
-const light1 = new THREE.DirectionalLight(0xffffff, 0.7);
+const light1 = new THREE.DirectionalLight(0xffffff, 1.0);
 light1.position.set(1, 1, 0).normalize();
 scene.add(light1);
 
-const light2 = new THREE.DirectionalLight(0xff5566, 0.7);
+const light2 = new THREE.DirectionalLight(0xff5566, 1.0);
 light2.position.set(-3, -1, 0).normalize();
 scene.add(light2);
-scene.add(new THREE.AmbientLight(0xffffff, 0.3));
+scene.add(new THREE.AmbientLight(0xffffff, 0.6));
 
 const fogColor = new THREE.Color(0xff5566);
 scene.fog = new THREE.Fog(fogColor, 1, 200);
@@ -79,31 +71,27 @@ function animatePlane() {
 
 // 云
 const cloudInstances: (THREE.Mesh | THREE.Group)[] = [];
-const numsOfClouds = 1;
-for (let i = 0; i < numsOfClouds; i++) {
-  createNewCloud();
-}
+createNewCloud();
 
-function createNewCloud() {
-  const cloud = makeCloud2();
+async function createNewCloud() {
+  const newClouds = await makeCloud0(3);
 
-  const scale = Math.random() * 1.15 + 0.5;
-  cloud.position.x = Math.random() * 10 - 5;
-  // cloud.position.z = Math.random() * 100 + 1;
-  cloud.position.z = 0;
-  cloud.position.y = Math.random() * 10 - 5;
-  cloud.position.y = 0;
-  cloud.rotation.y += Math.random() * 0.002 + 0.001;
-  cloud.scale.set(scale, scale, scale);
+  for (const cloud of newClouds) {
+    const scale = Math.random() * 0.3 + 0.8;
+    cloud.scale.set(scale, scale, scale);
+    cloud.position.x = Math.random() * 10 - 5;
+    cloud.position.z = Math.random() * 10 - 5;
+    cloud.position.y = Math.random() * 4 - 2;
 
-  scene.add(cloud);
-  cloudInstances.push(cloud);
+    scene.add(cloud);
+    cloudInstances.push(cloud);
+  }
 }
 
 // 云层动画
 function animateCloud() {
   cloudInstances.forEach((cld) => {
-    cld.position.z -= 0.00;
+    cld.position.z -= 0.01;
   });
 }
 
