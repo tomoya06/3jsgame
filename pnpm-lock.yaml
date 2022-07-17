@@ -1,12 +1,16 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@types/stats.js': ^0.17.0
   '@types/three': ^0.141.0
+  stats.js: ^0.17.0
   three: ^0.142.0
   typescript: ^4.5.4
   vite: ^2.9.9
 
 dependencies:
+  '@types/stats.js': registry.npmmirror.com/@types/stats.js/0.17.0
+  stats.js: registry.npmmirror.com/stats.js/0.17.0
   three: registry.npmmirror.com/three/0.142.0
 
 devDependencies:
@@ -15,6 +19,12 @@ devDependencies:
   vite: registry.npmmirror.com/vite/2.9.14
 
 packages:
+
+  registry.npmmirror.com/@types/stats.js/0.17.0:
+    resolution: {integrity: sha512-9w+a7bR8PeB0dCT/HBULU2fMqf6BAzvKbxFboYhmDtDkKPiyXYbjoe2auwsXlEFI7CFNMF1dCv3dFH5Poy9R1w==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@types/stats.js/-/stats.js-0.17.0.tgz}
+    name: '@types/stats.js'
+    version: 0.17.0
+    dev: false
 
   registry.npmmirror.com/@types/three/0.141.0:
     resolution: {integrity: sha512-OJdKDgTPVBUgc+s74DYoy4aLznbFFC38Xm4ElmU1YwGNgR7GGFVvFCX7lpVgOsT6S1zSJtGdajTsOYE8/xY9nA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@types/three/-/three-0.141.0.tgz}
@@ -371,6 +381,12 @@ packages:
     version: 1.0.2
     engines: {node: '>=0.10.0'}
     dev: true
+
+  registry.npmmirror.com/stats.js/0.17.0:
+    resolution: {integrity: sha512-hNKz8phvYLPEcRkeG1rsGmV5ChMjKDAWU7/OJJdDErPBNChQXxCo3WZurGpnWc6gZhAzEPFad1aVgyOANH1sMw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/stats.js/-/stats.js-0.17.0.tgz}
+    name: stats.js
+    version: 0.17.0
+    dev: false
 
   registry.npmmirror.com/supports-preserve-symlinks-flag/1.0.0:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz}
