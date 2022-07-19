@@ -3,4 +3,6 @@ export enum EnumDirection {
   RIGHT,
   UP,
   DOWN,
+  FRONT,
+  BACK
 }

@@ -153,6 +153,20 @@ function movePlane(params: { direction: EnumDirection }) {
       );
       midAngle = { x: 0, y: 0, z: THREE.MathUtils.degToRad(leanUnit) };
       break;
+    case EnumDirection.FRONT:
+      nextPos = new THREE.Vector3(
+        undefined,
+        undefined,
+        plane.position.z + moveUnit
+      );
+      break;
+    case EnumDirection.BACK:
+      nextPos = new THREE.Vector3(
+        undefined,
+        undefined,
+        plane.position.z - moveUnit
+      );
+      break;
   }
   const endAngle = { x: 0, y: 0, z: 0 };
 
@@ -224,7 +238,7 @@ async function init() {
   animate(0);
 
   setTimeout(() => {
-    movePlane({ direction: EnumDirection.RIGHT });
+    movePlane({ direction: EnumDirection.BACK });
   }, 1000);
 }
 
