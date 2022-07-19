@@ -5,8 +5,11 @@ import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
 import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
 import Stats from "stats.js";
 import makeCloud2 from "./assets/generate/cloud2";
+import * as TWEEN from "@tweenjs/tween.js";
+import { EnumDirection } from "./type";
 
 let mixer: THREE.AnimationMixer;
+let plane: THREE.Object3D;
 
 /** 场景 & 相机 */
 const clock = new THREE.Clock();
@@ -93,17 +96,91 @@ async function initPlane() {
 
   const planeSize = 2;
   planeModel.scene.scale.set(planeSize, planeSize, planeSize);
-  scene.add(planeModel.scene);
+  plane = new THREE.Object3D();
+  plane.add(planeModel.scene.clone());
 
-  const wheel = planeModel.scene.children[0];
+  scene.add(plane);
+
+  const wheel = plane.children[0];
   mixer = new THREE.AnimationMixer(wheel);
   mixer.clipAction(planeModel.animations[0]).play();
 }
 
 // 飞机动画
-function animatePlane() {
+function animatePlane(t: number) {
   const delta = clock.getDelta();
   mixer.update(delta);
+
+  TWEEN.update(t);
+}
+
+// 移动飞机
+function movePlane(params: { direction: EnumDirection }) {
+  const moveUnit = 5;
+  const leanUnit = 20;
+  let nextPos = plane.position;
+  let midAngle = { x: 0, y: 0, z: 0 };
+  switch (params.direction) {
+    case EnumDirection.UP:
+      nextPos = new THREE.Vector3(
+        undefined,
+        plane.position.y + moveUnit,
+        undefined
+      );
+      midAngle = { x: THREE.MathUtils.degToRad(-leanUnit), y: 0, z: 0 };
+      break;
+    case EnumDirection.DOWN:
+      nextPos = new THREE.Vector3(
+        undefined,
+        plane.position.y - moveUnit,
+        undefined
+      );
+      midAngle = { x: THREE.MathUtils.degToRad(leanUnit), y: 0, z: 0 };
+      break;
+    case EnumDirection.LEFT:
+      nextPos = new THREE.Vector3(
+        plane.position.x + moveUnit,
+        undefined,
+        undefined
+      );
+      midAngle = { x: 0, y: 0, z: THREE.MathUtils.degToRad(-leanUnit) };
+      break;
+    case EnumDirection.RIGHT:
+      nextPos = new THREE.Vector3(
+        plane.position.x - moveUnit,
+        undefined,
+        undefined
+      );
+      midAngle = { x: 0, y: 0, z: THREE.MathUtils.degToRad(leanUnit) };
+      break;
+  }
+  const endAngle = { x: 0, y: 0, z: 0 };
+
+  new TWEEN.Tween(plane.position)
+    .delay(60)
+    .to(nextPos, 600)
+    .easing(TWEEN.Easing.Quadratic.InOut)
+    .onUpdate(({ x, y, z }) => {
+      plane.position.x = x;
+      plane.position.y = y;
+      plane.position.z = z;
+    })
+    .start();
+  new TWEEN.Tween(plane.rotation)
+    .to(midAngle, 250)
+    .easing(TWEEN.Easing.Cubic.Out)
+    .delay(100)
+    .chain(
+      new TWEEN.Tween(plane.rotation)
+        .to(endAngle, 250)
+        .easing(TWEEN.Easing.Cubic.In)
+    )
+    .onUpdate(({ x, y, z }) => {
+      plane.rotateX(x);
+      plane.rotateY(y);
+      plane.rotateZ(z);
+    })
+    .start();
 }
 
 const cloudInstances: (THREE.Mesh | THREE.Group)[] = [];
@@ -125,6 +202,9 @@ function animateCloud() {
   });
 }
 
+// TODO: 初始化时 页面上有一部分云
+
+// 随机生成云
 function generateClouds() {
   if (Math.random() < 0.005) {
     createNewCloud();
@@ -141,10 +221,14 @@ async function init() {
   await initGeneralHelper();
   await initPlane();
 
-  animate();
+  animate(0);
+
+  setTimeout(() => {
+    movePlane({ direction: EnumDirection.RIGHT });
+  }, 1000);
 }
 
-function animate() {
+function animate(t: number) {
   requestAnimationFrame(animate);
 
   stats.begin();
@@ -154,7 +238,7 @@ function animate() {
 
   /** 动画帧更新 */
   animateCloud();
-  animatePlane();
+  animatePlane(t);
 
   // controls.update();
   renderer.render(scene, camera);
