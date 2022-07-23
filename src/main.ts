@@ -7,6 +7,7 @@ import Stats from "stats.js";
 import * as TWEEN from "@tweenjs/tween.js";
 import { EnumDirection } from "./type";
 import { Sky } from "./models/sky";
+import { Ground } from "./models/ground";
 
 let mixer: THREE.AnimationMixer;
 let plane: THREE.Object3D;
@@ -21,8 +22,7 @@ const camera = new THREE.PerspectiveCamera(
   1,
   1000
 );
-camera.position.set(-30, 15, 0);
-camera.lookAt(0, 0, 0);
+camera.position.set(-40, 200, 0);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -98,6 +98,8 @@ async function initPlane() {
   planeModel.scene.scale.set(planeSize, planeSize, planeSize);
   plane = new THREE.Object3D();
   plane.add(planeModel.scene.clone());
+
+  plane.position.set(0, 180, 0);
 
   scene.add(plane);
 
@@ -200,6 +202,9 @@ function movePlane(params: { direction: EnumDirection }) {
 const sky = new Sky();
 sky.init(scene);
 
+const ground = new Ground();
+ground.init(scene);
+
 /* 加载模型 */
 
 async function init() {
@@ -207,11 +212,9 @@ async function init() {
   await initGeneralHelper();
   await initPlane();
 
-  animate(0);
+  camera.lookAt(plane.position);
 
-  setTimeout(() => {
-    movePlane({ direction: EnumDirection.BACK });
-  }, 1000);
+  animate(0);
 }
 
 function animate(t: number) {
@@ -222,6 +225,7 @@ function animate(t: number) {
   /** 动画帧更新 */
   animatePlane(t);
   sky.animate();
+  ground.animate();
 
   // controls.update();
   renderer.render(scene, camera);

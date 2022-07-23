@@ -1,17 +1,33 @@
 import * as THREE from "three";
-import makeCloud2 from "../assets/generate/cloud";
+import makeTree from "../assets/generate/tree";
 
-export class Sky {
+export class Ground {
   private group: THREE.Group;
 
   constructor() {
-    const radius = 180,
+    const radius = 160,
       width = 100,
       degDelta = 3,
-      heightRange = 10,
       widthDelta = width / 5;
 
     this.group = new THREE.Group();
+
+    // 加个地面
+    const earthGeo = new THREE.CylinderGeometry(
+      radius,
+      radius,
+      width * 2,
+      radius * 2
+    );
+    const earthMat = new THREE.MeshBasicMaterial({
+      color: 0xd6c4a3,
+    });
+    const earchMesh = new THREE.Mesh(earthGeo, earthMat);
+    earchMesh.position.set(0, 0, 0);
+    earchMesh.rotateY(THREE.MathUtils.degToRad(90));
+    earchMesh.rotateX(THREE.MathUtils.degToRad(90));
+
+    this.group.add(earchMesh);
 
     for (let i = 0; i < 360; i += degDelta) {
       const curDeg = THREE.MathUtils.degToRad(i);
@@ -26,14 +42,12 @@ export class Sky {
       [...positions].forEach((pos) => {
         const x = pos;
 
-        // 角度再加一点随机偏移 防止看起来在排队- -
-        const rotateX =
-          curDeg + (Math.random() * heightRange * 2 - heightRange);
-        const radiusH = radius + (Math.random() * 20 - 10);
+        const rotateX = curDeg + (Math.random() * degDelta - degDelta / 2);
+        const radiusH = radius;
         const z = radiusH * Math.sin(rotateX),
           y = radiusH * Math.cos(rotateX);
 
-        const newCloud = makeCloud2();
+        const newCloud = makeTree();
         newCloud.position.set(x, y, z);
         newCloud.rotateX(rotateX);
 
