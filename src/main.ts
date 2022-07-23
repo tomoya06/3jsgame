@@ -84,7 +84,7 @@ function initLights() {
   scene.add(new THREE.AmbientLight(0xffffff, 0.6));
 
   const fogColor = new THREE.Color(0xffffff);
-  scene.fog = new THREE.Fog(fogColor, 80, 150);
+  scene.fog = new THREE.Fog(fogColor, 80, 200);
 }
 
 async function initPlane() {

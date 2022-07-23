@@ -16,14 +16,14 @@ export class Ground {
     const earthGeo = new THREE.CylinderGeometry(
       radius,
       radius,
-      width * 2,
+      width,
       radius * 2
     );
     const earthMat = new THREE.MeshBasicMaterial({
-      color: 0xd6c4a3,
+      color: 0x6f9e72,
     });
     const earchMesh = new THREE.Mesh(earthGeo, earthMat);
-    earchMesh.position.set(0, 0, 0);
+    earchMesh.position.set(width, 0, 0);
     earchMesh.rotateY(THREE.MathUtils.degToRad(90));
     earchMesh.rotateX(THREE.MathUtils.degToRad(90));
 
