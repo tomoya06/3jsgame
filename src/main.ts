@@ -4,9 +4,9 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
 import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
 import Stats from "stats.js";
-import makeCloud2 from "./assets/generate/cloud2";
 import * as TWEEN from "@tweenjs/tween.js";
 import { EnumDirection } from "./type";
+import { Sky } from "./models/sky";
 
 let mixer: THREE.AnimationMixer;
 let plane: THREE.Object3D;
@@ -83,8 +83,8 @@ function initLights() {
 
   scene.add(new THREE.AmbientLight(0xffffff, 0.6));
 
-  const fogColor = new THREE.Color(0xff5566);
-  scene.fog = new THREE.Fog(fogColor, 1, 200);
+  const fogColor = new THREE.Color(0xffffff);
+  scene.fog = new THREE.Fog(fogColor, 80, 150);
 }
 
 async function initPlane() {
@@ -197,36 +197,8 @@ function movePlane(params: { direction: EnumDirection }) {
     .start();
 }
 
-const cloudInstances: (THREE.Mesh | THREE.Group)[] = [];
-
-// 云
-async function createNewCloud() {
-  const newCloud = makeCloud2();
-  newCloud.position.z = 15;
-  newCloud.position.y = 2 - Math.random() * 4;
-  newCloud.position.x = (5 - Math.random() * 10) * 3;
-  cloudInstances.push(newCloud);
-  scene.add(newCloud);
-}
-
-// 云层动画
-function animateCloud() {
-  cloudInstances.forEach((cld) => {
-    cld.position.z -= 0.01;
-  });
-}
-
-// TODO: 初始化时 页面上有一部分云
-
-// 随机生成云
-function generateClouds() {
-  if (Math.random() < 0.005) {
-    createNewCloud();
-    console.log("new cloud generated");
-  }
-
-  // TODO: 如果云层已经消失在左侧 则删掉
-}
+const sky = new Sky();
+sky.init(scene);
 
 /* 加载模型 */
 
@@ -247,12 +219,9 @@ function animate(t: number) {
 
   stats.begin();
 
-  /** 生成新元素 */
-  generateClouds();
-
   /** 动画帧更新 */
-  animateCloud();
   animatePlane(t);
+  sky.animate();
 
   // controls.update();
   renderer.render(scene, camera);

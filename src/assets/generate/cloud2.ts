@@ -21,7 +21,7 @@ export default function makeCloud2() {
     m.rotation.y = Math.random() * Math.PI * 2;
 
     //Randomly scale the cubes
-    const s = 0.1 + Math.random() * 0.9;
+    const s = 0.2 + Math.random() * 1.3;
     m.scale.set(s, s, s);
     mesh.add(m);
   }
