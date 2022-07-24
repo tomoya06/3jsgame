@@ -2,15 +2,15 @@ import * as THREE from "three";
 import makeCloud2 from "../assets/generate/cloud";
 import BaseModel from "./base";
 
+const radius = 180,
+  width = 140,
+  degDelta = 3,
+  heightRange = 10,
+  widthDelta = width / 5;
+
 export class Sky extends BaseModel {
   constructor() {
     super();
-
-    const radius = 180,
-      width = 100,
-      degDelta = 3,
-      heightRange = 10,
-      widthDelta = width / 5;
 
     for (let i = 0; i < 360; i += degDelta) {
       const curDeg = THREE.MathUtils.degToRad(i);

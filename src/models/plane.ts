@@ -10,9 +10,6 @@ const decerate = 0.002;
 const accerate = 0.004;
 const maxSpeed = 0.1;
 const maxReach = 20;
-const speedToAngle = (speed: number) => {
-  return speed * THREE.MathUtils.degToRad(90);
-};
 
 const isKeyDown = Array(26).fill(false);
 
@@ -84,7 +81,13 @@ export class Plane extends BaseModel {
     }
   }
 
-  private drive() {
+  public init(scene: THREE.Scene): void {
+    super.init(scene);
+
+    this.bindkey();
+  }
+
+  public animate(): void {
     this.calcAcc();
 
     for (let axis = 0; axis <= 2; axis++) {
@@ -134,103 +137,12 @@ export class Plane extends BaseModel {
       rotateX
     );
 
+    const delta = this.clock.getDelta();
+    const mixerSpeed = (1 + this.speed[2] * 8) * delta;
+
     this.group.position.set(newPosition[0], newPosition[1], newPosition[2]);
     this.group.rotation.set(rotateX, 0, rotateZ);
-  }
 
-  public init(scene: THREE.Scene): void {
-    super.init(scene);
-
-    this.bindkey();
-  }
-
-  public animate(): void {
-    const delta = this.clock.getDelta();
-    this.mixer.update(delta);
-
-    this.drive();
+    this.mixer.update(mixerSpeed);
   }
 }
-
-// // 移动飞机
-// function movePlane(params: { direction: EnumDirection }) {
-//   const moveUnit = 5;
-//   const leanUnit = 20;
-//   let nextPos = plane.position;
-//   let midAngle = { x: 0, y: 0, z: 0 };
-//   switch (params.direction) {
-//     case EnumDirection.UP:
-//       nextPos = new THREE.Vector3(
-//         undefined,
-//         plane.position.y + moveUnit,
-//         undefined
-//       );
-//       midAngle = { x: THREE.MathUtils.degToRad(-leanUnit), y: 0, z: 0 };
-//       break;
-//     case EnumDirection.DOWN:
-//       nextPos = new THREE.Vector3(
-//         undefined,
-//         plane.position.y - moveUnit,
-//         undefined
-//       );
-//       midAngle = { x: THREE.MathUtils.degToRad(leanUnit), y: 0, z: 0 };
-//       break;
-//     case EnumDirection.LEFT:
-//       nextPos = new THREE.Vector3(
-//         plane.position.x + moveUnit,
-//         undefined,
-//         undefined
-//       );
-//       midAngle = { x: 0, y: 0, z: THREE.MathUtils.degToRad(-leanUnit) };
-//       break;
-//     case EnumDirection.RIGHT:
-//       nextPos = new THREE.Vector3(
-//         plane.position.x - moveUnit,
-//         undefined,
-//         undefined
-//       );
-//       midAngle = { x: 0, y: 0, z: THREE.MathUtils.degToRad(leanUnit) };
-//       break;
-//     case EnumDirection.FRONT:
-//       nextPos = new THREE.Vector3(
-//         undefined,
-//         undefined,
-//         plane.position.z + moveUnit
-//       );
-//       break;
-//     case EnumDirection.BACK:
-//       nextPos = new THREE.Vector3(
-//         undefined,
-//         undefined,
-//         plane.position.z - moveUnit
-//       );
-//       break;
-//   }
-//   const endAngle = { x: 0, y: 0, z: 0 };
-
-//   new TWEEN.Tween(plane.position)
-//     .delay(60)
-//     .to(nextPos, 600)
-//     .easing(TWEEN.Easing.Quadratic.InOut)
-//     .onUpdate(({ x, y, z }) => {
-//       plane.position.x = x;
-//       plane.position.y = y;
-//       plane.position.z = z;
-//     })
-//     .start();
-//   new TWEEN.Tween(plane.rotation)
-//     .to(midAngle, 250)
-//     .easing(TWEEN.Easing.Cubic.Out)
-//     .delay(100)
-//     .chain(
-//       new TWEEN.Tween(plane.rotation)
-//         .to(endAngle, 250)
-//         .easing(TWEEN.Easing.Cubic.In)
-//     )
-//     .onUpdate(({ x, y, z }) => {
-//       plane.rotateX(x);
-//       plane.rotateY(y);
-//       plane.rotateZ(z);
-//     })
-//     .start();
-// }
