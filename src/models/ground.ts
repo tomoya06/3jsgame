@@ -2,10 +2,11 @@ import * as THREE from "three";
 import makeTree from "../assets/generate/tree";
 import BaseModel from "./base";
 
-const radius = 160,
+const radius = 1000,
   width = 200,
-  degDelta = 3,
+  degDelta = 2,
   widthDelta = width / 5;
+
 export class Ground extends BaseModel {
   constructor() {
     super();
@@ -53,11 +54,11 @@ export class Ground extends BaseModel {
       });
     }
 
-    this.group.position.y = 0;
+    this.group.position.y = 160 - radius;
     this.group.position.x = -(width / 3);
   }
 
   public animate(): void {
-    this.group.rotation.x -= 0.0002;
+    this.group.rotation.x -= 0.00005;
   }
 }

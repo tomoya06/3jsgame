@@ -2,9 +2,9 @@ import * as THREE from "three";
 import makeCloud2 from "../assets/generate/cloud";
 import BaseModel from "./base";
 
-const radius = 180,
+const radius = 1000,
   width = 140,
-  degDelta = 3,
+  degDelta = 2,
   heightRange = 10,
   widthDelta = width / 5;
 
@@ -40,11 +40,11 @@ export class Sky extends BaseModel {
       });
     }
 
-    this.group.position.y = 0;
+    this.group.position.y = 180 - radius;
     this.group.position.x = -(width / 3);
   }
 
   public animate(): void {
-    this.group.rotation.x -= 0.0002;
+    this.group.rotation.x -= 0.00005;
   }
 }
