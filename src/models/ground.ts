@@ -1,16 +1,15 @@
 import * as THREE from "three";
 import makeTree from "../assets/generate/tree";
+import BaseModel from "./base";
 
-export class Ground {
-  private group: THREE.Group;
-
+export class Ground extends BaseModel {
   constructor() {
+    super();
+
     const radius = 160,
       width = 100,
       degDelta = 3,
       widthDelta = width / 5;
-
-    this.group = new THREE.Group();
 
     // 加个地面
     const earthGeo = new THREE.CylinderGeometry(
@@ -57,10 +56,6 @@ export class Ground {
 
     this.group.position.y = 0;
     this.group.position.x = -(width / 3);
-  }
-
-  public init(scene: THREE.Scene) {
-    scene.add(this.group);
   }
 
   public animate(): void {

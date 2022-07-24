@@ -1,17 +1,16 @@
 import * as THREE from "three";
 import makeCloud2 from "../assets/generate/cloud";
+import BaseModel from "./base";
 
-export class Sky {
-  private group: THREE.Group;
-
+export class Sky extends BaseModel {
   constructor() {
+    super();
+
     const radius = 180,
       width = 100,
       degDelta = 3,
       heightRange = 10,
       widthDelta = width / 5;
-
-    this.group = new THREE.Group();
 
     for (let i = 0; i < 360; i += degDelta) {
       const curDeg = THREE.MathUtils.degToRad(i);
@@ -43,10 +42,6 @@ export class Sky {
 
     this.group.position.y = 0;
     this.group.position.x = -(width / 3);
-  }
-
-  public init(scene: THREE.Scene) {
-    scene.add(this.group);
   }
 
   public animate(): void {

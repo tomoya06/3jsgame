@@ -4,17 +4,11 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
 import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
 import Stats from "stats.js";
-import * as TWEEN from "@tweenjs/tween.js";
-import { EnumDirection } from "./type";
 import { Sky } from "./models/sky";
 import { Ground } from "./models/ground";
-
-let mixer: THREE.AnimationMixer;
-let plane: THREE.Object3D;
+import { Plane } from "./models/plane";
 
 /** 场景 & 相机 */
-const clock = new THREE.Clock();
-
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
   50,
@@ -87,143 +81,42 @@ function initLights() {
   scene.fog = new THREE.Fog(fogColor, 80, 200);
 }
 
-async function initPlane() {
-  /* 加载模型 */
-  // 飞机
-  const planeModel = await new GLTFLoader().loadAsync(
-    "src/assets/models/cartoon_plane/scene.gltf"
-  );
+let sky: Sky, ground: Ground, plane: Plane;
 
-  const planeSize = 2;
-  planeModel.scene.scale.set(planeSize, planeSize, planeSize);
-  plane = new THREE.Object3D();
-  plane.add(planeModel.scene.clone());
+async function initModels() {
+  const [planeModel] = await Promise.all([
+    new GLTFLoader().loadAsync("src/assets/models/cartoon_plane/scene.gltf"),
+  ]);
 
-  plane.position.set(0, 180, 0);
+  sky = new Sky();
+  sky.init(scene);
 
-  scene.add(plane);
+  ground = new Ground();
+  ground.init(scene);
 
-  const wheel = plane.children[0];
-  mixer = new THREE.AnimationMixer(wheel);
-  mixer.clipAction(planeModel.animations[0]).play();
+  plane = new Plane(planeModel);
+  plane.init(scene);
 }
-
-// 飞机动画
-function animatePlane(t: number) {
-  const delta = clock.getDelta();
-  mixer.update(delta);
-
-  TWEEN.update(t);
-}
-
-// 移动飞机
-function movePlane(params: { direction: EnumDirection }) {
-  const moveUnit = 5;
-  const leanUnit = 20;
-  let nextPos = plane.position;
-  let midAngle = { x: 0, y: 0, z: 0 };
-  switch (params.direction) {
-    case EnumDirection.UP:
-      nextPos = new THREE.Vector3(
-        undefined,
-        plane.position.y + moveUnit,
-        undefined
-      );
-      midAngle = { x: THREE.MathUtils.degToRad(-leanUnit), y: 0, z: 0 };
-      break;
-    case EnumDirection.DOWN:
-      nextPos = new THREE.Vector3(
-        undefined,
-        plane.position.y - moveUnit,
-        undefined
-      );
-      midAngle = { x: THREE.MathUtils.degToRad(leanUnit), y: 0, z: 0 };
-      break;
-    case EnumDirection.LEFT:
-      nextPos = new THREE.Vector3(
-        plane.position.x + moveUnit,
-        undefined,
-        undefined
-      );
-      midAngle = { x: 0, y: 0, z: THREE.MathUtils.degToRad(-leanUnit) };
-      break;
-    case EnumDirection.RIGHT:
-      nextPos = new THREE.Vector3(
-        plane.position.x - moveUnit,
-        undefined,
-        undefined
-      );
-      midAngle = { x: 0, y: 0, z: THREE.MathUtils.degToRad(leanUnit) };
-      break;
-    case EnumDirection.FRONT:
-      nextPos = new THREE.Vector3(
-        undefined,
-        undefined,
-        plane.position.z + moveUnit
-      );
-      break;
-    case EnumDirection.BACK:
-      nextPos = new THREE.Vector3(
-        undefined,
-        undefined,
-        plane.position.z - moveUnit
-      );
-      break;
-  }
-  const endAngle = { x: 0, y: 0, z: 0 };
-
-  new TWEEN.Tween(plane.position)
-    .delay(60)
-    .to(nextPos, 600)
-    .easing(TWEEN.Easing.Quadratic.InOut)
-    .onUpdate(({ x, y, z }) => {
-      plane.position.x = x;
-      plane.position.y = y;
-      plane.position.z = z;
-    })
-    .start();
-  new TWEEN.Tween(plane.rotation)
-    .to(midAngle, 250)
-    .easing(TWEEN.Easing.Cubic.Out)
-    .delay(100)
-    .chain(
-      new TWEEN.Tween(plane.rotation)
-        .to(endAngle, 250)
-        .easing(TWEEN.Easing.Cubic.In)
-    )
-    .onUpdate(({ x, y, z }) => {
-      plane.rotateX(x);
-      plane.rotateY(y);
-      plane.rotateZ(z);
-    })
-    .start();
-}
-
-const sky = new Sky();
-sky.init(scene);
-
-const ground = new Ground();
-ground.init(scene);
 
 /* 加载模型 */
 
 async function init() {
   await initLights();
   await initGeneralHelper();
-  await initPlane();
+  await initModels();
 
-  camera.lookAt(plane.position);
+  camera.lookAt(plane.obj.position);
 
-  animate(0);
+  animate();
 }
 
-function animate(t: number) {
+function animate() {
   requestAnimationFrame(animate);
 
   stats.begin();
 
   /** 动画帧更新 */
-  animatePlane(t);
+  plane.animate();
   sky.animate();
   ground.animate();
 
