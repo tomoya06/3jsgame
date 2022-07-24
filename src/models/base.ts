@@ -17,5 +17,7 @@ export default class BaseModel {
     scene.add(this.group);
   }
 
+  public destroy() {}
+
   public animate() {}
 }

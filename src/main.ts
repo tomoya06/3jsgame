@@ -99,7 +99,6 @@ async function initModels() {
 }
 
 /* 加载模型 */
-
 async function init() {
   await initLights();
   await initGeneralHelper();
@@ -134,5 +133,3 @@ function onWindowResize() {
 
 init();
 window.addEventListener("resize", onWindowResize, false);
-
-window.addEventListener("keydown", (e) => {});
