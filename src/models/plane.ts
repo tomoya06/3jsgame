@@ -7,9 +7,12 @@ const planeSize = 2;
 const planeHeight = 180;
 
 const decerate = 0.002;
-const accerate = 0.01;
+const accerate = 0.004;
 const maxSpeed = 0.1;
 const maxReach = 20;
+const speedToAngle = (speed: number) => {
+  return speed * THREE.MathUtils.degToRad(90);
+};
 
 const isKeyDown = Array(26).fill(false);
 
@@ -83,7 +86,6 @@ export class Plane extends BaseModel {
 
   private drive() {
     this.calcAcc();
-    console.log(this.speed, this.acce);
 
     for (let axis = 0; axis <= 2; axis++) {
       const curSpeed = this.speed[axis];
@@ -118,7 +120,22 @@ export class Plane extends BaseModel {
         +maxReach + this.defaultPosition[idx],
       ])
     );
+
+    const rotateZ = this.speed[0] * 4 * THREE.MathUtils.degToRad(-90);
+    const rotateX = this.speed[1] * 2 * THREE.MathUtils.degToRad(-90);
+    console.log(
+      "speed",
+      this.speed,
+      "acce",
+      this.acce,
+      "RZ",
+      rotateZ,
+      "RX",
+      rotateX
+    );
+
     this.group.position.set(newPosition[0], newPosition[1], newPosition[2]);
+    this.group.rotation.set(rotateX, 0, rotateZ);
   }
 
   public init(scene: THREE.Scene): void {
