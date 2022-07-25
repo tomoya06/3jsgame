@@ -9,7 +9,7 @@ const planeHeight = 180;
 const decerate = 0.002;
 const accerate = 0.004;
 const maxSpeed = 0.1;
-const maxReach = 20;
+const maxReach = [50, 20, 20];
 
 const isKeyDown = Array(26).fill(false);
 
@@ -119,23 +119,13 @@ export class Plane extends BaseModel {
       curPosition.z + this.speed[2],
     ].map((pos, idx) =>
       fixInRange(pos, [
-        -maxReach + this.defaultPosition[idx],
-        +maxReach + this.defaultPosition[idx],
+        this.defaultPosition[idx] - maxReach[idx],
+        this.defaultPosition[idx] + maxReach[idx],
       ])
     );
 
     const rotateZ = this.speed[0] * 4 * THREE.MathUtils.degToRad(-90);
     const rotateX = this.speed[1] * 2 * THREE.MathUtils.degToRad(-90);
-    console.log(
-      "speed",
-      this.speed,
-      "acce",
-      this.acce,
-      "RZ",
-      rotateZ,
-      "RX",
-      rotateX
-    );
 
     const delta = this.clock.getDelta();
     const mixerSpeed = (1 + this.speed[2] * 8) * delta;

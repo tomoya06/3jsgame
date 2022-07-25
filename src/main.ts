@@ -7,6 +7,7 @@ import Stats from "stats.js";
 import { Sky } from "./models/sky";
 import { Ground } from "./models/ground";
 import { Plane } from "./models/plane";
+import { Sun } from "./models/sun";
 
 /** 场景 & 相机 */
 const scene = new THREE.Scene();
@@ -76,12 +77,9 @@ function initLights() {
   scene.add(light2Helper);
 
   scene.add(new THREE.AmbientLight(0xffffff, 0.6));
-
-  const fogColor = new THREE.Color(0xffffff);
-  scene.fog = new THREE.Fog(fogColor, 80, 200);
 }
 
-let sky: Sky, ground: Ground, plane: Plane;
+let sky: Sky, ground: Ground, plane: Plane, sun: Sun;
 
 async function initModels() {
   const [planeModel] = await Promise.all([
@@ -96,6 +94,9 @@ async function initModels() {
 
   plane = new Plane(planeModel);
   plane.init(scene);
+
+  sun = new Sun();
+  sun.init(scene);
 }
 
 /* 加载模型 */
@@ -118,8 +119,8 @@ function animate() {
   plane.animate();
   sky.animate();
   ground.animate();
+  sun.animate();
 
-  // controls.update();
   renderer.render(scene, camera);
 
   stats.end();
