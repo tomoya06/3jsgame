@@ -18,7 +18,7 @@ export class Ground extends BaseModel {
       width,
       radius * 2
     );
-    const earthMat = new THREE.MeshBasicMaterial({
+    const earthMat = new THREE.MeshPhongMaterial({
       color: 0x6f9e72,
     });
     const earchMesh = new THREE.Mesh(earthGeo, earthMat);

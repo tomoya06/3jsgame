@@ -63,21 +63,7 @@ async function initGeneralHelper() {
 }
 
 /** 灯光 */
-function initLights() {
-  const light1 = new THREE.DirectionalLight(0xffffff, 1.0);
-  const light1Helper = new THREE.DirectionalLightHelper(light1);
-  light1.position.set(1, 1, 0).normalize();
-  scene.add(light1);
-  scene.add(light1Helper);
-
-  const light2 = new THREE.DirectionalLight(0xff5566, 1.0);
-  light2.position.set(-3, -1, 0).normalize();
-  const light2Helper = new THREE.DirectionalLightHelper(light2);
-  scene.add(light2);
-  scene.add(light2Helper);
-
-  scene.add(new THREE.AmbientLight(0xffffff, 0.6));
-}
+function initLights() {}
 
 let sky: Sky, ground: Ground, plane: Plane, sun: Sun;
 
