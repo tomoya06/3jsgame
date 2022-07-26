@@ -83,6 +83,7 @@ async function initModels() {
 
   sun = new Sun();
   sun.init(scene);
+  window.sun = sun;
 }
 
 /* 加载模型 */
