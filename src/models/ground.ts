@@ -21,6 +21,7 @@ export class Ground extends BaseModel {
     const earthMat = new THREE.MeshBasicMaterial({
       color: 0x6f9e72,
     });
+
     const earchMesh = new THREE.Mesh(earthGeo, earthMat);
     earchMesh.position.set(width / 2, 0, 0);
     earchMesh.rotateY(THREE.MathUtils.degToRad(90));

@@ -22,6 +22,7 @@ camera.position.set(-40, 200, 0);
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setClearColor(0x000000, 0);
+renderer.shadowMap.enabled = true;
 document.body.appendChild(renderer.domElement);
 
 // 性能监控
@@ -47,16 +48,16 @@ async function initGeneralHelper() {
     "src/assets/fonts/helvetiker_regular.typeface.json"
   );
   [
-    [10, 0, 0],
-    [0, 10, 0],
-    [0, 0, 10],
+    [10, 180, 0],
+    [0, 180, 0],
+    [0, 180, 10],
   ].map((ord) => {
     const geo = new TextGeometry(`[${ord.join(",")}]`, {
       font,
     });
     const mesh = new THREE.Mesh(geo, fontMaterials);
     mesh.position.set(ord[0], ord[1], ord[2]);
-    mesh.scale.set(0.001, 0.001, 0.001);
+    mesh.scale.set(0.003, 0.003, 0.003);
     mesh.rotateY((-90 / 180) * Math.PI);
     scene.add(mesh);
   });
@@ -65,12 +66,25 @@ async function initGeneralHelper() {
 /** 灯光 */
 function initLights() {
   const light1 = new THREE.DirectionalLight(0xffffff, 1.0);
-  const light1Helper = new THREE.DirectionalLightHelper(light1);
-  light1.position.set(1, 1, 0).normalize();
-  scene.add(light1);
-  scene.add(light1Helper);
+  // const light1Helper = new THREE.DirectionalLightHelper(light1);
+  light1.position.set(0, 300, 0);
+  light1.castShadow = true;
 
-  const light2 = new THREE.DirectionalLight(0xff5566, 1.0);
+  // define the visible area of the projected shadow
+  light1.shadow.camera.left = -650;
+  light1.shadow.camera.right = 650;
+  light1.shadow.camera.top = 650;
+  light1.shadow.camera.bottom = -650;
+  light1.shadow.camera.far = 300;
+  light1.shadow.camera.near = 100;
+  // Shadow map size
+  light1.shadow.mapSize.width = 512;
+  light1.shadow.mapSize.height = 512;
+
+  scene.add(light1);
+  // scene.add(light1Helper);
+
+  const light2 = new THREE.DirectionalLight(0xff5566, 0.6);
   light2.position.set(-3, -1, 0).normalize();
   const light2Helper = new THREE.DirectionalLightHelper(light2);
   scene.add(light2);

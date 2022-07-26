@@ -23,9 +23,21 @@ export class Plane extends BaseModel {
   constructor(planeModel: GLTF) {
     super();
 
+    this.speed = [0, 0, 0];
+    this.acce = [0, 0, 0];
+
     planeModel.scene.scale.set(planeSize, planeSize, planeSize);
+    planeModel.scene.traverse((node) => {
+      if (node.isObject3D) {
+        node.castShadow = true;
+        node.receiveShadow = true;
+      }
+    });
+
     const plane = new THREE.Object3D();
     plane.add(planeModel.scene.clone());
+
+    plane.receiveShadow = true;
 
     const wheel = plane.children[0];
 
@@ -40,9 +52,6 @@ export class Plane extends BaseModel {
       this.defaultPosition[1],
       this.defaultPosition[2]
     );
-
-    this.speed = [0, 0, 0];
-    this.acce = [0, 0, 0];
   }
 
   private bindkey() {

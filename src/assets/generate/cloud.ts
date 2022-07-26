@@ -4,7 +4,7 @@ export default function makeCloud2() {
   const mesh = new THREE.Group();
 
   const geom = new THREE.DodecahedronGeometry(1, 0);
-  const mat = new THREE.MeshPhongMaterial({
+  const mat = new THREE.MeshLambertMaterial({
     color: 0xffffff,
   });
 
