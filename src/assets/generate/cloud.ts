@@ -6,6 +6,7 @@ export default function makeCloud2() {
   const geom = new THREE.DodecahedronGeometry(1, 0);
   const mat = new THREE.MeshPhongMaterial({
     color: 0xffffff,
+    flatShading: true,
   });
 
   const nBlocs = 3 + Math.floor(Math.random() * 3);

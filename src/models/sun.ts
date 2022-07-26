@@ -119,7 +119,7 @@ export class Sun extends BaseModel {
     this.lights[subKey].intensity = 0;
 
     this.lights.ambient.intensity =
-      (0.5 - Math.abs(position.percent - 0.5)) * 1.2;
+      (0.5 - Math.abs(position.percent - 0.5)) * 1 + 0.1;
   }
 
   public init(scene: THREE.Scene): void {
@@ -146,7 +146,7 @@ export class Sun extends BaseModel {
 
     this.animateLight(position);
 
-    // 更新阳光
+    // TODO: 日夜切换的时候会有骤变
     if (this.scene?.fog) {
       if (position.isNight) {
         this.scene.fog.color = new THREE.Color(0x311f57);
