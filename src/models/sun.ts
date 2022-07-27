@@ -149,7 +149,6 @@ export class Sun extends BaseModel {
 
   public animate(): void {
     const position = curTimeToPosition();
-    console.log(JSON.stringify(position));
 
     if (position.isNight) {
       this.moon.position.z = position.x;
