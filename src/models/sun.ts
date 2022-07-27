@@ -2,6 +2,8 @@ import BaseModel from "./base";
 import * as THREE from "three";
 import { fixInRange } from "../utils/number";
 import { GUI } from "dat.gui";
+import { colord } from "colord";
+import mj from "number-precision";
 
 const radius = 60,
   centerPos = [200 + radius, 180 - radius, 0],
@@ -19,12 +21,13 @@ const guiMocker = {
 
 const gui = new GUI();
 const timeFolder = gui.addFolder("TIME");
-timeFolder.add(guiMocker, "mockTimePercent", 0, 1);
+timeFolder.add(guiMocker, "mockTimePercent", 0, 1, 0.001);
 timeFolder.open();
 
 type PositionByTimeType = ReturnType<typeof curTimeToPosition>;
 interface LightGroup {
   ambient: THREE.Light;
+  nightAmb: THREE.Light;
   main: THREE.Light;
   night: THREE.Light;
 }
@@ -40,17 +43,25 @@ const curTimeToPosition = () => {
   const midnightTime = startTime;
   const curTime = Date.now();
 
-  // const ts = ((curTime - midnightTime) * timeSpeed) % fullDay;
-  const ts = guiMocker.mockTimePercent * fullDay;
+  const ts = ((curTime - midnightTime) * timeSpeed) % fullDay;
+  // const ts = guiMocker.mockTimePercent * fullDay;
 
-  const isNight = ts > halfday;
-  let percent = (ts % halfday) / halfday;
-  let x = fixInRange(2 * percent - 1, [-1, 1]) * trackA;
-  let y = trackB * Math.sqrt(1 - (x * x) / (trackA * trackA));
+  const isNight = ts >= halfday;
+  let percent = mj.divide(ts % halfday, halfday);
+  const heightPercent = mj.times(
+    mj.minus(0.5, Math.abs(mj.minus(percent, 0.5))),
+    2
+  );
+  let x = mj.times(fixInRange(2 * percent - 1, [-1, 1]), trackA);
+  let y = mj.times(
+    Math.sqrt(mj.minus(1, mj.divide(mj.times(x, x), mj.times(trackA, trackA)))),
+    trackB
+  );
 
   return {
     isNight,
     percent,
+    heightPercent,
     x,
     y,
   };
@@ -92,9 +103,10 @@ export class Sun extends BaseModel {
   }
 
   private initLight(): LightGroup {
-    const ambient = new THREE.AmbientLight(0xffffff);
+    const ambient = new THREE.AmbientLight(0xdedede);
+    const nightAmb = new THREE.AmbientLight(0x7590bf);
 
-    const main = new THREE.DirectionalLight(0xffffff);
+    const main = new THREE.DirectionalLight(0xc9c3a7);
     main.position.set(0, 0, 0).normalize();
 
     const night = new THREE.DirectionalLight(0x141037);
@@ -102,6 +114,7 @@ export class Sun extends BaseModel {
 
     return {
       ambient,
+      nightAmb,
       main,
       night,
     };
@@ -110,16 +123,20 @@ export class Sun extends BaseModel {
   private animateLight(position: PositionByTimeType) {
     let lightKey: keyof LightGroup = "main";
     let subKey: keyof LightGroup = "night";
+    let lightAmb: keyof LightGroup = "ambient";
+    let subAmb: keyof LightGroup = "nightAmb";
     if (position.isNight) {
       lightKey = "night";
       subKey = "main";
+      lightAmb = "nightAmb";
+      subAmb = "ambient";
     }
     this.lights[lightKey].position.set(0, position.y, position.x).normalize();
-    this.lights[lightKey].intensity = position.percent;
+    this.lights[lightKey].intensity = mj.times(position.heightPercent, 0.9);
     this.lights[subKey].intensity = 0;
 
-    this.lights.ambient.intensity =
-      (0.5 - Math.abs(position.percent - 0.5)) * 1 + 0.1;
+    this.lights[lightAmb].intensity = mj.times(position.heightPercent, 0.9);
+    this.lights[subAmb].intensity = 0;
   }
 
   public init(scene: THREE.Scene): void {
@@ -132,6 +149,7 @@ export class Sun extends BaseModel {
 
   public animate(): void {
     const position = curTimeToPosition();
+    console.log(JSON.stringify(position));
 
     if (position.isNight) {
       this.moon.position.z = position.x;
@@ -149,9 +167,17 @@ export class Sun extends BaseModel {
     // TODO: 日夜切换的时候会有骤变
     if (this.scene?.fog) {
       if (position.isNight) {
-        this.scene.fog.color = new THREE.Color(0x311f57);
+        this.scene.fog.color = new THREE.Color(
+          colord("#311f57")
+            .darken(1 - position.heightPercent)
+            .toHex()
+        );
       } else {
-        this.scene.fog.color = new THREE.Color(0xf7d9aa);
+        this.scene.fog.color = new THREE.Color(
+          colord("#f7d9aa")
+            .darken(1 - position.heightPercent)
+            .toHex()
+        );
       }
     }
   }
