@@ -1,57 +1,27 @@
 import BaseModel from "./base";
 import * as THREE from "three";
-import { fixInRange } from "../utils/number";
-import { GUI } from "dat.gui";
 import { colord } from "colord";
 import mj from "number-precision";
+import { fixInRange } from "../utils/number";
+import timeSystem, { TimeProgressType } from "../system/time";
 
 const radius = 60,
   centerPos = [200 + radius, 180 - radius, 0],
   trackB = centerPos[1],
   trackA = trackB * 2;
 
-// TODO: 时间处理拎出去
-const halfday = 12 * 60 * 60 * 1000;
-const fullDay = 24 * 60 * 60 * 1000;
-const startTime = Date.now() - halfday;
-const timeSpeed = 1000 * 3;
-const guiMocker = {
-  mockTimePercent: 0.75,
-};
-
-const gui = new GUI();
-const timeFolder = gui.addFolder("TIME");
-timeFolder.add(guiMocker, "mockTimePercent", 0, 1, 0.001);
-timeFolder.open();
-
-type PositionByTimeType = ReturnType<typeof curTimeToPosition>;
 interface LightGroup {
   ambient: THREE.Light;
   nightAmb: THREE.Light;
   main: THREE.Light;
   night: THREE.Light;
+  defaultAmb: THREE.Light;
 }
 
-const curTimeToPosition = () => {
-  // // FOR REALTIME
-  // const midnight = new Date();
-  // midnight.setHours(0, 0, 0, 0);
-  // const midnightTime = midnight.getTime();
-  // const curTime = Date.now();
+type TimePositionType = ReturnType<typeof curTimeToPosition>;
 
-  // FOR FAKE TIME
-  const midnightTime = startTime;
-  const curTime = Date.now();
-
-  const ts = ((curTime - midnightTime) * timeSpeed) % fullDay;
-  // const ts = guiMocker.mockTimePercent * fullDay;
-
-  const isNight = ts >= halfday;
-  let percent = mj.divide(ts % halfday, halfday);
-  const heightPercent = mj.times(
-    mj.minus(0.5, Math.abs(mj.minus(percent, 0.5))),
-    2
-  );
+const curTimeToPosition = (time: TimeProgressType) => {
+  const { percent } = time;
   let x = mj.times(fixInRange(2 * percent - 1, [-1, 1]), trackA);
   let y = mj.times(
     Math.sqrt(mj.minus(1, mj.divide(mj.times(x, x), mj.times(trackA, trackA)))),
@@ -59,11 +29,9 @@ const curTimeToPosition = () => {
   );
 
   return {
-    isNight,
-    percent,
-    heightPercent,
     x,
     y,
+    ...time,
   };
 };
 
@@ -105,6 +73,7 @@ export class Sun extends BaseModel {
   private initLight(): LightGroup {
     const ambient = new THREE.AmbientLight(0xdedede);
     const nightAmb = new THREE.AmbientLight(0x7590bf);
+    const defaultAmb = new THREE.AmbientLight(0x98bdfa, 0.3);
 
     const main = new THREE.DirectionalLight(0xc9c3a7);
     main.position.set(0, 0, 0).normalize();
@@ -115,12 +84,13 @@ export class Sun extends BaseModel {
     return {
       ambient,
       nightAmb,
+      defaultAmb,
       main,
       night,
     };
   }
 
-  private animateLight(position: PositionByTimeType) {
+  private animateLight(position: TimePositionType) {
     let lightKey: keyof LightGroup = "main";
     let subKey: keyof LightGroup = "night";
     let lightAmb: keyof LightGroup = "ambient";
@@ -132,10 +102,10 @@ export class Sun extends BaseModel {
       subAmb = "ambient";
     }
     this.lights[lightKey].position.set(0, position.y, position.x).normalize();
-    this.lights[lightKey].intensity = mj.times(position.heightPercent, 0.9);
+    this.lights[lightKey].intensity = mj.times(position.heightPercent, 0.6);
     this.lights[subKey].intensity = 0;
 
-    this.lights[lightAmb].intensity = mj.times(position.heightPercent, 0.9);
+    this.lights[lightAmb].intensity = mj.times(position.heightPercent, 0.6);
     this.lights[subAmb].intensity = 0;
   }
 
@@ -148,7 +118,7 @@ export class Sun extends BaseModel {
   }
 
   public animate(): void {
-    const position = curTimeToPosition();
+    const position = curTimeToPosition(timeSystem.time);
 
     if (position.isNight) {
       this.moon.position.z = position.x;

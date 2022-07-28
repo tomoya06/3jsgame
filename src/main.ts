@@ -8,6 +8,7 @@ import { Sky } from "./models/sky";
 import { Ground } from "./models/ground";
 import { Plane } from "./models/plane";
 import { Sun } from "./models/sun";
+import timeSystem from "./system/time";
 
 /** 场景 & 相机 */
 const scene = new THREE.Scene();
@@ -83,7 +84,7 @@ async function initModels() {
 
   sun = new Sun();
   sun.init(scene);
-  window.sun = sun;
+  // window.sun = sun;
 }
 
 /* 加载模型 */
@@ -101,6 +102,8 @@ function animate() {
   requestAnimationFrame(animate);
 
   stats.begin();
+  /** 内置系统更新 */
+  timeSystem.animate();
 
   /** 动画帧更新 */
   plane.animate();
