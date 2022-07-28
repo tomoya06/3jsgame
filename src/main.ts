@@ -9,6 +9,8 @@ import { Ground } from "./models/ground";
 import { Plane } from "./models/plane";
 import { Sun } from "./models/sun";
 import timeSystem from "./system/time";
+import Space from "./models/space";
+import BaseModel from "./models/base";
 
 /** 场景 & 相机 */
 const scene = new THREE.Scene();
@@ -66,25 +68,19 @@ async function initGeneralHelper() {
 /** 灯光 */
 function initLights() {}
 
-let sky: Sky, ground: Ground, plane: Plane, sun: Sun;
+const worldModels: BaseModel[] = [];
+let plane: Plane;
 
 async function initModels() {
   const [planeModel] = await Promise.all([
     new GLTFLoader().loadAsync("src/assets/models/cartoon_plane/scene.gltf"),
   ]);
 
-  sky = new Sky();
-  sky.init(scene);
-
-  ground = new Ground();
-  ground.init(scene);
-
   plane = new Plane(planeModel);
-  plane.init(scene);
 
-  sun = new Sun();
-  sun.init(scene);
-  // window.sun = sun;
+  worldModels.push(new Sky(), new Ground(), new Sun(), new Space(), plane);
+
+  worldModels.forEach((obj) => obj.init(scene));
 }
 
 /* 加载模型 */
@@ -106,10 +102,7 @@ function animate() {
   timeSystem.animate();
 
   /** 动画帧更新 */
-  plane.animate();
-  sky.animate();
-  ground.animate();
-  sun.animate();
+  worldModels.forEach((obj) => obj.animate());
 
   renderer.render(scene, camera);
 
