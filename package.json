@@ -19,6 +19,7 @@
     "colord": "^2.9.2",
     "dat.gui": "^0.7.9",
     "number-precision": "^1.5.2",
+    "postprocessing": "^6.28.4",
     "stats.js": "^0.17.0",
     "three": "^0.142.0"
   }

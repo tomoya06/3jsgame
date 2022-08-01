@@ -29,8 +29,8 @@ const curTimeProgress = () => {
   const midnightTime = startTime;
   const curTime = Date.now();
 
-  const ts = ((curTime - midnightTime) * timeSpeed) % fullDay;
-  // const ts = guiMocker.mockTimePercent * fullDay;
+  // const ts = ((curTime - midnightTime) * timeSpeed) % fullDay;
+  const ts = guiMocker.mockTimePercent * fullDay;
 
   const isNight = ts >= halfday;
   let percent = mj.divide(ts % halfday, halfday);

@@ -11,6 +11,7 @@ import { Sun } from "./models/sun";
 import timeSystem from "./system/time";
 import Space from "./models/space";
 import BaseModel from "./models/base";
+import * as POSTPROCESSING from "postprocessing";
 
 /** 场景 & 相机 */
 const scene = new THREE.Scene();
@@ -26,6 +27,34 @@ const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setClearColor(0x000000, 0);
 document.body.appendChild(renderer.domElement);
+
+const cone = new THREE.Mesh(
+  new THREE.ConeGeometry(1, 2, 50),
+  new THREE.MeshBasicMaterial({ color: 0x000000 })
+);
+cone.position.set(0, 180, -1);
+cone.rotation.set(-0.5 * Math.PI, 0, 0);
+scene.add(cone);
+const circle = new THREE.Mesh(
+  new THREE.OctahedronGeometry(0.4),
+  new THREE.MeshBasicMaterial({ color: 0xfeefd5 })
+);
+circle.position.set(0, 180, 0);
+scene.add(circle);
+const godray = new POSTPROCESSING.GodRaysEffect(camera, circle, {
+  resolutionScale: 1,
+  density: 0.8,
+  decay: 1,
+  weight: 0.6,
+  samples: 60,
+  exposure: 0.1,
+});
+const renderPass = new POSTPROCESSING.RenderPass(scene, camera);
+const effectPass = new POSTPROCESSING.EffectPass(camera, godray);
+effectPass.renderToScreen = true;
+const composer = new POSTPROCESSING.EffectComposer(renderer);
+composer.addPass(renderPass);
+composer.addPass(effectPass);
 
 // 性能监控
 const stats = new Stats();
@@ -104,7 +133,8 @@ function animate() {
   /** 动画帧更新 */
   worldModels.forEach((obj) => obj.animate());
 
-  renderer.render(scene, camera);
+  // renderer.render(scene, camera);
+  composer.render();
 
   stats.end();
 }
