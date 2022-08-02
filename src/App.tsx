@@ -1,35 +1,30 @@
 import * as THREE from "three";
 import React, { useRef, useState } from "react";
 import { Canvas, useFrame, ThreeElements } from "@react-three/fiber";
+import Cloud from "./assets/generator/cloud";
+import Sky from "./contents/Sky";
 
-function Box(props: ThreeElements["mesh"]) {
-  const ref = useRef<THREE.Mesh>(null!);
-  const [hovered, hover] = useState(false);
-  const [clicked, click] = useState(false);
-  useFrame((state, delta) => (ref.current.rotation.x += 0.01));
-  return (
-    <mesh
-      {...props}
-      ref={ref}
-      scale={clicked ? 1.5 : 1}
-      onClick={(event) => click(!clicked)}
-      onPointerOver={(event) => hover(true)}
-      onPointerOut={(event) => hover(false)}
-    >
-      <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial color={hovered ? "hotpink" : "orange"} />
-    </mesh>
-  );
+function Controls() {
+  return useFrame(({camera}) => {
+    camera.lookAt(0, 0, 0);
+  })
 }
 
 function App() {
   return (
-    <Canvas>
-      <ambientLight />
-      <pointLight position={[10, 10, 10]} />
-      <Box position={[-1.2, 0, 0]} />
-      <Box position={[1.2, 0, 0]} />
-    </Canvas>
+    <div style={{ width: "100vw", height: "100vh" }}>
+      <Canvas
+        camera={{
+          position: [10, 10, 10],
+        }}
+      >
+        <ambientLight color={0xffffff} />
+        <pointLight position={[10, 10, 10]} />
+        <Sky></Sky>
+        <primitive object={new THREE.AxesHelper(10)}></primitive>
+        <Controls />
+      </Canvas>
+    </div>
   );
 }
 
