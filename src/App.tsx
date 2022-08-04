@@ -1,13 +1,12 @@
 import * as THREE from "three";
-import React, { useRef, useState } from "react";
-import { Canvas, useFrame, ThreeElements } from "@react-three/fiber";
-import Cloud from "./assets/generator/cloud";
+import { Canvas, useFrame } from "@react-three/fiber";
 import Sky from "./contents/Sky";
+import Plane from "./contents/Plane";
 
 function Controls() {
-  return useFrame(({camera}) => {
+  return useFrame(({ camera }) => {
     camera.lookAt(0, 0, 0);
-  })
+  });
 }
 
 function App() {
@@ -20,7 +19,8 @@ function App() {
       >
         <ambientLight color={0xffffff} />
         <pointLight position={[10, 10, 10]} />
-        <Sky></Sky>
+        <Sky />
+        <Plane />
         <primitive object={new THREE.AxesHelper(10)}></primitive>
         <Controls />
       </Canvas>
