@@ -1,7 +1,7 @@
 import { useFrame, useLoader } from "@react-three/fiber";
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
-import { useAnimations, useGLTF } from '@react-three/drei';
+import { useAnimations, useGLTF } from "@react-three/drei";
 import { fixInRange } from "../utils/number";
 
 const planeSize = 2;
@@ -85,9 +85,12 @@ const calcSpeed = (
     ])
   );
 
+  const mixerSpeed = 1 + newSpeed[2] * 8;
+
   return {
     newPosition: new THREE.Vector3(...newPosition),
     newSpeed,
+    mixerSpeed,
   };
 };
 
@@ -111,22 +114,12 @@ export default function Plane() {
     setKeyDown(newKeyDown);
   };
 
-  const ref = useRef(null);
-  const gltf = useGLTF(
-    "src/assets/models/cartoon_plane/scene.gltf"
-  );
-  const mixer = new THREE.AnimationMixer(gltf.scene);
-  
+  const gltf = useGLTF("src/assets/models/cartoon_plane/scene.gltf");
+  const mixer = useMemo(() => new THREE.AnimationMixer(gltf.scene), [gltf]);
+
   useEffect(() => {
     mixer.clipAction(gltf.animations[0]).play();
   }, []);
-  
-  const updatePosture = () => {
-    const acce = calcAcc(isKeyDown);
-    const { newPosition, newSpeed } = calcSpeed(speed, acce, position);
-    setPosition(newPosition);
-    setSpeed(newSpeed);
-  };
 
   useEffect(() => {
     onkeydown = onkeyup = (e) => {
@@ -135,14 +128,21 @@ export default function Plane() {
   }, []);
 
   useFrame((state, delta) => {
-    updatePosture();
-    mixer.update(delta);
+    const acce = calcAcc(isKeyDown);
+    const { newPosition, newSpeed, mixerSpeed } = calcSpeed(
+      speed,
+      acce,
+      position
+    );
+    setPosition(newPosition);
+    setSpeed(newSpeed);
+    mixer.update(delta * mixerSpeed);
   });
 
   return (
     <group position={position} rotation={rotation}>
       <Suspense fallback={null}>
-        <primitive object={gltf.scene} ref={ref}></primitive>
+        <primitive object={gltf.scene}></primitive>
       </Suspense>
     </group>
   );
