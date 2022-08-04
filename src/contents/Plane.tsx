@@ -1,7 +1,7 @@
 import { useFrame, useLoader } from "@react-three/fiber";
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
-import { useAnimations, useGLTF } from "@react-three/drei";
+import { SpotLight, useAnimations, useGLTF } from "@react-three/drei";
 import { fixInRange } from "../utils/number";
 
 const planeSize = 2;
@@ -127,6 +127,16 @@ export default function Plane() {
     };
   }, []);
 
+  const lightRef = useRef<THREE.SpotLight>(null);
+
+  useEffect(() => {
+    lightRef.current?.target.position.set(
+      position.x,
+      position.y + 10 * Math.sin(-rotation.x),
+      position.z + 10 * Math.cos(-rotation.x),
+    );
+  }, [lightRef, position, rotation]);
+
   useFrame((state, delta) => {
     const acce = calcAcc(isKeyDown);
     const { newPosition, newSpeed, mixerSpeed } = calcSpeed(
@@ -144,6 +154,17 @@ export default function Plane() {
       <Suspense fallback={null}>
         <primitive object={gltf.scene}></primitive>
       </Suspense>
+      <SpotLight
+        penumbra={1}
+        distance={10}
+        angle={0.35}
+        attenuation={10}
+        anglePower={2}
+        intensity={10}
+        color="#ffc100"
+        position={[0, -0.15, 1]}
+        ref={lightRef}
+      />
     </group>
   );
 }
