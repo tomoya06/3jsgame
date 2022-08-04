@@ -118,6 +118,7 @@ export default function Plane() {
   const mixer = useMemo(() => new THREE.AnimationMixer(gltf.scene), [gltf]);
 
   useEffect(() => {
+    gltf.scene.scale.set(planeSize, planeSize, planeSize);
     mixer.clipAction(gltf.animations[0]).play();
   }, []);
 
@@ -133,7 +134,7 @@ export default function Plane() {
     lightRef.current?.target.position.set(
       position.x,
       position.y + 10 * Math.sin(-rotation.x),
-      position.z + 10 * Math.cos(-rotation.x),
+      position.z + 10 * Math.cos(-rotation.x)
     );
   }, [lightRef, position, rotation]);
 
@@ -157,12 +158,12 @@ export default function Plane() {
       <SpotLight
         penumbra={1}
         distance={10}
-        angle={0.35}
+        angle={0.2}
         attenuation={10}
         anglePower={2}
         intensity={10}
-        color="#ffc100"
-        position={[0, -0.15, 1]}
+        color="#ffe28a"
+        position={[0, -0.2, 2]}
         ref={lightRef}
       />
     </group>

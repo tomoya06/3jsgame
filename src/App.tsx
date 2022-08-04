@@ -14,7 +14,7 @@ function App() {
     <div style={{ width: "100vw", height: "100vh" }}>
       <Canvas
         camera={{
-          position: [10, 10, 10],
+          position: [-10, 0, 0],
         }}
       >
         <ambientLight color={0xffffff} />
