@@ -45,7 +45,7 @@ export default function Ground() {
 
   useFrame(() => {
     if (groudRef.current) {
-      groudRef.current.rotation.x -= 0.00001;
+      groudRef.current.rotation.x -= 0.00002;
     }
   });
 

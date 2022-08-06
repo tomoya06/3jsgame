@@ -86,9 +86,13 @@ const animateLight = (position: TimePositionType, scene: THREE.Scene) => {
   lights[subAmb].intensity = 0;
 
   if (scene.fog) {
-    scene.fog.color = new THREE.Color(
-      getColorGradientByIndex(position.hour).toHex()
-    );
+    let fogColor = colord("#e1c45e")
+      .darken(1 - position.heightPercent)
+      .toHex();
+    if (position.isNight) {
+      fogColor = colord("#2F1107").darken(0.8).toHex();
+    }
+    scene.fog.color = new THREE.Color(fogColor);
   }
 };
 
