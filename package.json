@@ -11,6 +11,7 @@
   "dependencies": {
     "@react-three/drei": "^9.19.5",
     "@react-three/fiber": "^8.2.2",
+    "colord": "^2.9.2",
     "dat.gui": "^0.7.9",
     "number-precision": "^1.5.2",
     "react": "^18.2.0",
