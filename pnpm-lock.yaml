@@ -3,10 +3,12 @@ lockfileVersion: 5.4
 specifiers:
   '@react-three/drei': ^9.19.5
   '@react-three/fiber': ^8.2.2
+  '@types/dat.gui': ^0.7.7
   '@types/react': ^18.0.15
   '@types/react-dom': ^18.0.6
   '@types/three': ^0.143.0
   '@vitejs/plugin-react': ^2.0.0
+  dat.gui: ^0.7.9
   number-precision: ^1.5.2
   react: ^18.2.0
   react-dom: ^18.2.0
@@ -17,12 +19,14 @@ specifiers:
 dependencies:
   '@react-three/drei': registry.npmmirror.com/@react-three/drei/9.19.5_ll26hgvpzy7rx7d4zfmuh3rava
   '@react-three/fiber': registry.npmmirror.com/@react-three/fiber/8.2.2_f72olm6mn3unzgg4exeiaoxanm
+  dat.gui: registry.npmmirror.com/dat.gui/0.7.9
   number-precision: registry.npmmirror.com/number-precision/1.5.2
   react: registry.npmmirror.com/react/18.2.0
   react-dom: registry.npmmirror.com/react-dom/18.2.0_react@18.2.0
   three: registry.npmmirror.com/three/0.143.0
 
 devDependencies:
+  '@types/dat.gui': registry.npmmirror.com/@types/dat.gui/0.7.7
   '@types/react': registry.npmmirror.com/@types/react/18.0.15
   '@types/react-dom': registry.npmmirror.com/@types/react-dom/18.0.6
   '@types/three': registry.npmmirror.com/@types/three/0.143.0
@@ -599,6 +603,12 @@ packages:
       zustand: registry.npmmirror.com/zustand/3.7.2_react@18.2.0
     dev: false
 
+  registry.npmmirror.com/@types/dat.gui/0.7.7:
+    resolution: {integrity: sha512-CxLCme0He5Jk3uQwfO/fGZMyNhb/ypANzqX0yU9lviBQMlen5SOvQTBQ/Cd9x5mFlUAK5Tk8RgvTyLj1nYkz+w==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@types/dat.gui/-/dat.gui-0.7.7.tgz}
+    name: '@types/dat.gui'
+    version: 0.7.7
+    dev: true
+
   registry.npmmirror.com/@types/prop-types/15.7.5:
     resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@types/prop-types/-/prop-types-15.7.5.tgz}
     name: '@types/prop-types'
@@ -779,6 +789,12 @@ packages:
     resolution: {integrity: sha512-uX1KG+x9h5hIJsaKR9xHUeUraxf8IODOwq9JLNPq6BwB04a/xgpq3rcx47l5BZu5zBPlgD342tdke3Hom/nJRA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/csstype/-/csstype-3.1.0.tgz}
     name: csstype
     version: 3.1.0
+
+  registry.npmmirror.com/dat.gui/0.7.9:
+    resolution: {integrity: sha512-sCNc1OHobc+Erc1HqiswYgHdVNpSJUlk/Hz8vzOCsER7rl+oF/4+v8GXFUyCgtXpoCX6+bnmg07DedLvBLwYKQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/dat.gui/-/dat.gui-0.7.9.tgz}
+    name: dat.gui
+    version: 0.7.9
+    dev: false
 
   registry.npmmirror.com/debounce/1.2.1:
     resolution: {integrity: sha512-XRRe6Glud4rd/ZGQfiV1ruXSfbvfJedlV9Y6zOlP+2K04vBYiJEte6stfFkCP03aMnY5tsipamumUjL14fofug==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/debounce/-/debounce-1.2.1.tgz}

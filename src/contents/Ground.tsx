@@ -28,6 +28,7 @@ export default function Ground() {
         const x = pos;
 
         const rotateX = curDeg + (Math.random() * degDelta - degDelta / 2);
+        const rotateY = Math.random() * 0.2 * Math.PI;
         const radiusH = radius;
         const z = radiusH * Math.sin(rotateX),
           y = radiusH * Math.cos(rotateX);
@@ -35,7 +36,7 @@ export default function Ground() {
         output.push({
           key: `tree_${x}_${y}_${z}`,
           pos: new Vector3(x, y, z),
-          rotx: new Euler(rotateX, 0, 0),
+          rotx: new Euler(rotateX, rotateY, 0),
         });
       });
     }

@@ -3,10 +3,17 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import Sky from "./contents/Sky";
 import Plane from "./contents/Plane";
 import Ground from "./contents/Ground";
+import timeSystem from "./system/time";
 
 function Controls() {
   return useFrame(({ camera }) => {
     camera.lookAt(0, 0, 0);
+  });
+}
+
+function TimeSystemControls() {
+  return useFrame(() => {
+    timeSystem.animate();
   });
 }
 
@@ -25,6 +32,7 @@ function App() {
         <Ground />
         <primitive object={new THREE.AxesHelper(10)}></primitive>
         <Controls />
+        <TimeSystemControls />
       </Canvas>
     </div>
   );
