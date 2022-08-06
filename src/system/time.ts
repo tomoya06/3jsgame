@@ -1,6 +1,7 @@
 import BaseSystem from "./base";
 import mj from "number-precision";
 import { GUI } from "dat.gui";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const halfday = 12 * 60 * 60 * 1000;
 const fullDay = 24 * 60 * 60 * 1000;
@@ -76,5 +77,32 @@ class TimeSystem extends BaseSystem {
 }
 
 const timeSystem = new TimeSystem();
+
+export const useTimeSystem = (): [TimeProgressType, boolean] => {
+  const [ts, setTs] = useState(timeSystem.time);
+  const [isNight, setNight] = useState(false);
+
+  const requestRef = useRef<number>();
+
+  const update = () => {
+    const newTime = { ...timeSystem.time };
+    setTs(newTime);
+
+    if (newTime.isNight !== isNight) {
+      setNight(newTime.isNight);
+    }
+
+    requestRef.current = requestAnimationFrame(update);
+  };
+
+  useEffect(() => {
+    requestRef.current = requestAnimationFrame(update);
+    return () => {
+      cancelAnimationFrame(requestRef.current || 0);
+    };
+  }, []);
+
+  return [ts, isNight];
+};
 
 export default timeSystem;

@@ -8,11 +8,12 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { Environment } from "@react-three/drei";
 import { getColorGradientByIndex } from "../utils/skycolor";
 
-const radius = 60,
+// TODO: GOD RAY FOR SUN
+const radius = 4,
   centerPos = [0, 0, 0],
-  trackB = 120,
+  trackB = 180,
   trackA = 300,
-  trackOffset = [200, -140, 0],
+  trackOffset = [300, -140, 0],
   hideHeight = -300;
 
 interface LightGroup {
@@ -98,7 +99,6 @@ const animateLight = (position: TimePositionType, scene: THREE.Scene) => {
 
 export default function Orbit() {
   const sunRef = useRef<THREE.Mesh>(null);
-  const moonRef = useRef<THREE.Mesh>(null);
 
   const scene = useThree((state) => state.scene);
 
@@ -107,21 +107,17 @@ export default function Orbit() {
   }, [scene]);
 
   useFrame((state) => {
-    if (!sunRef.current || !moonRef.current) {
+    if (!sunRef.current) {
       return;
     }
     const position = curTimeToPosition(timeSystem.time);
 
     if (position.isNight) {
-      // moonRef.current.position.x = position.x + trackOffset[0];
-      // moonRef.current.position.y = position.y + trackOffset[1];
-      // moonRef.current.position.z = position.z + trackOffset[2];
       sunRef.current.position.y = hideHeight;
     } else {
       sunRef.current.position.x = position.x + trackOffset[0];
       sunRef.current.position.y = position.y + trackOffset[1];
       sunRef.current.position.z = position.z + trackOffset[2];
-      moonRef.current.position.y = hideHeight;
     }
 
     animateLight(position, state.scene);
@@ -130,15 +126,10 @@ export default function Orbit() {
   return (
     <group>
       <mesh ref={sunRef}>
-        <meshPhongMaterial
-          color={0xedeb27}
-          flatShading={true}
-          specular={0xffffff}
-          fog={false}
-        />
+        <meshPhongMaterial color={0xedeb27} flatShading={true} fog={false} />
         <octahedronGeometry args={[radius, 6]} />
       </mesh>
-      <mesh ref={moonRef}>
+      {/* <mesh ref={moonRef}>
         <meshPhongMaterial
           color={0x7b76ae}
           flatShading={true}
@@ -146,7 +137,7 @@ export default function Orbit() {
           specular={0xffffff}
         />
         <octahedronGeometry args={[radius, 6]} />
-      </mesh>
+      </mesh> */}
     </group>
   );
 }

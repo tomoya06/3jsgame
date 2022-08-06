@@ -3,7 +3,7 @@ import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { SpotLight, useAnimations, useGLTF } from "@react-three/drei";
 import { fixInRange } from "../utils/number";
-import timeSystem from "../system/time";
+import timeSystem, { useTimeSystem } from "../system/time";
 
 const planeSize = 2;
 const planeHeight = 0;
@@ -14,6 +14,8 @@ const maxSpeed = 0.1;
 const maxReach = [50, 20, 20];
 
 const defaultPosition = [0, planeHeight, 0];
+
+const accumulateKeys = [87, 83, 65, 68, 81, 69];
 
 const calcAcc = (isKeyDown: boolean[]) => {
   const acce = [0, 0, 0];
@@ -102,6 +104,7 @@ export default function Plane() {
     new THREE.Vector3(...defaultPosition)
   );
   const [showLight, setLight] = useState(false);
+  const [ts, isNight] = useTimeSystem();
 
   const rotation = useMemo(() => {
     const rotateZ = speed[0] * 4 * THREE.MathUtils.degToRad(-90);
@@ -126,7 +129,9 @@ export default function Plane() {
 
   useEffect(() => {
     onkeydown = onkeyup = (e) => {
-      updateKeyDown(e.keyCode, e.type === "keydown");
+      if (accumulateKeys.includes(e.keyCode)) {
+        updateKeyDown(e.keyCode, e.type === "keydown");
+      }
     };
   }, []);
 
@@ -152,10 +157,9 @@ export default function Plane() {
     mixer.update(delta * mixerSpeed);
   });
 
-  useFrame(() => {
-    const { isNight } = timeSystem.time;
-    setLight(isNight);
-  });
+  useEffect(() => {
+    setLight(ts.isNight);
+  }, [ts.isNight]);
 
   return (
     <group position={position} rotation={rotation}>

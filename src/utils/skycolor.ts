@@ -122,7 +122,7 @@ const grads: ColorGrad[] = [
   ],
 ];
 
-const positionOffset = 0.6;
+const positionOffset = 0.5;
 
 function toCSSGradient(data: ColorGrad) {
   var css = "linear-gradient(to bottom, ";
