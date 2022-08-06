@@ -3,6 +3,7 @@ import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { SpotLight, useAnimations, useGLTF } from "@react-three/drei";
 import { fixInRange } from "../utils/number";
+import timeSystem from "../system/time";
 
 const planeSize = 2;
 const planeHeight = 0;
@@ -100,6 +101,7 @@ export default function Plane() {
   const [position, setPosition] = useState(
     new THREE.Vector3(...defaultPosition)
   );
+  const [showLight, setLight] = useState(false);
 
   const rotation = useMemo(() => {
     const rotateZ = speed[0] * 4 * THREE.MathUtils.degToRad(-90);
@@ -150,22 +152,29 @@ export default function Plane() {
     mixer.update(delta * mixerSpeed);
   });
 
+  useFrame(() => {
+    const { isNight } = timeSystem.time;
+    setLight(isNight);
+  });
+
   return (
     <group position={position} rotation={rotation}>
       <Suspense fallback={null}>
         <primitive object={gltf.scene}></primitive>
       </Suspense>
-      <SpotLight
-        penumbra={1}
-        distance={10}
-        angle={0.2}
-        attenuation={10}
-        anglePower={2}
-        intensity={10}
-        color="#ffe28a"
-        position={[0, -0.2, 2]}
-        ref={lightRef}
-      />
+      {showLight && (
+        <SpotLight
+          penumbra={1}
+          angle={0.2}
+          attenuation={10}
+          intensity={10}
+          distance={10}
+          anglePower={2}
+          color="#ffe28a"
+          position={[0, -0.2, 2]}
+          ref={lightRef}
+        />
+      )}
     </group>
   );
 }
