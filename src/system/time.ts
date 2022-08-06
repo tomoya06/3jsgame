@@ -2,7 +2,6 @@ import BaseSystem from "./base";
 import mj from "number-precision";
 import { GUI } from "dat.gui";
 
-// TODO: 时间处理拎出去
 const halfday = 12 * 60 * 60 * 1000;
 const fullDay = 24 * 60 * 60 * 1000;
 const startTime = Date.now() - halfday;
@@ -31,8 +30,8 @@ const curTimeProgress = () => {
   const midnightTime = startTime;
   const curTime = Date.now();
 
-  // const ts = ((curTime - midnightTime) * timeSpeed) % fullDay;
-  const ts = guiMocker.mockTimePercent * fullDay;
+  const ts = ((curTime - midnightTime) * timeSpeed) % fullDay;
+  // const ts = guiMocker.mockTimePercent * fullDay;
 
   const percent = mj.divide(ts % halfday, halfday);
   const dayPercent = mj.divide(ts % fullDay, fullDay);

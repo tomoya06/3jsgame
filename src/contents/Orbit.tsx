@@ -129,8 +129,8 @@ export default function Orbit() {
         <meshPhongMaterial
           color={0xedeb27}
           flatShading={true}
+          specular={0xffffff}
           fog={false}
-          specular={0xffe9b5}
         />
         <octahedronGeometry args={[radius, 6]} />
       </mesh>
