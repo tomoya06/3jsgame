@@ -7,19 +7,20 @@ import { colord } from "colord";
 import { useFrame, useThree } from "@react-three/fiber";
 import { Environment } from "@react-three/drei";
 
-const radius = 20,
+const radius = 60,
   centerPos = [0, 0, 0],
   trackB = 120,
   trackA = 300,
-  trackOffset = [200, -100, 0],
+  trackOffset = [200, -140, 0],
   hideHeight = -300;
 
-const sunAmbColor = 0xdedede,
-  nightAmbColor = 0x7590bf,
-  idleAmbColor = 0x98bdfa,
-  sunDirColor = 0xc9c3a7,
-  nightDirColor = 0x141037,
-  fogColor = 0xf7d9aa;
+interface LightGroup {
+  ambient: THREE.Light;
+  nightAmb: THREE.Light;
+  main: THREE.Light;
+  night: THREE.Light;
+  defaultAmb: THREE.Light;
+}
 
 type TimePositionType = ReturnType<typeof curTimeToPosition>;
 
@@ -39,18 +40,79 @@ const curTimeToPosition = (time: TimeProgressType) => {
   };
 };
 
+const initLight = (scene: THREE.Scene) => {
+  const ambient = new THREE.AmbientLight(0xdedede);
+  const nightAmb = new THREE.AmbientLight(0x7590bf);
+  const defaultAmb = new THREE.AmbientLight(0x98bdfa, 0.3);
+
+  const main = new THREE.DirectionalLight(0xc9c3a7);
+  main.position.set(0, 0, 0).normalize();
+
+  const night = new THREE.DirectionalLight(0x141037);
+  night.position.set(0, 0, 0).normalize();
+
+  const output = {
+    ambient,
+    nightAmb,
+    defaultAmb,
+    main,
+    night,
+  };
+
+  Object.values(output).forEach((light) => scene.add(light));
+
+  return output;
+};
+
+let lights: LightGroup;
+
+const animateLight = (position: TimePositionType, scene: THREE.Scene) => {
+  let lightKey: keyof LightGroup = "main";
+  let subKey: keyof LightGroup = "night";
+  let lightAmb: keyof LightGroup = "ambient";
+  let subAmb: keyof LightGroup = "nightAmb";
+  if (position.isNight) {
+    lightKey = "night";
+    subKey = "main";
+    lightAmb = "nightAmb";
+    subAmb = "ambient";
+  }
+  lights[lightKey].position.set(0, position.y, position.x).normalize();
+  lights[lightKey].intensity = mj.times(position.heightPercent, 0.6);
+  lights[subKey].intensity = 0;
+
+  lights[lightAmb].intensity = mj.times(position.heightPercent, 0.6);
+  lights[subAmb].intensity = 0;
+
+  if (scene.fog) {
+    if (position.isNight) {
+      scene.fog.color = new THREE.Color(
+        colord("#311f57")
+          .darken(1 - position.heightPercent)
+          .toHex()
+      );
+    } else {
+      scene.fog.color = new THREE.Color(
+        colord("#f7d9aa")
+          .darken(1 - position.heightPercent)
+          .toHex()
+      );
+    }
+  }
+};
+
 export default function Orbit() {
   const sunRef = useRef<THREE.Mesh>(null);
   const moonRef = useRef<THREE.Mesh>(null);
-  const dirRef = useRef<THREE.DirectionalLight>(null);
-  const mainAmbRef = useRef<THREE.AmbientLight>(null);
 
-  const [ambIndensity, setAmbIndencity] = useState(0);
-  const [dirColor, setDirColor] = useState(sunDirColor);
-  const [dirIndensity, setDirIndensity] = useState(0);
+  const scene = useThree((state) => state.scene);
+
+  useEffect(() => {
+    lights = initLight(scene);
+  }, [scene]);
 
   useFrame((state) => {
-    if (!sunRef.current || !moonRef.current || !mainAmbRef.current) {
+    if (!sunRef.current || !moonRef.current) {
       return;
     }
     const position = curTimeToPosition(timeSystem.time);
@@ -67,42 +129,18 @@ export default function Orbit() {
       moonRef.current.position.y = hideHeight;
     }
 
-    if (position.isNight) {
-      mainAmbRef.current.color = new THREE.Color(nightAmbColor);
-    } else {
-      mainAmbRef.current.color = new THREE.Color(sunAmbColor);
-    }
-    setAmbIndencity(mj.times(position.heightPercent, 1));
-
-    if (position.isNight) {
-      setDirColor(sunDirColor);
-    } else {
-      setDirColor(nightDirColor);
-    }
-    dirRef.current?.position.set(0, position.y, position.z).normalize();
-    setDirIndensity(mj.times(position.heightPercent, 1));
-
-    if (state.scene.fog) {
-      if (position.isNight) {
-        state.scene.fog.color = new THREE.Color(
-          colord("#311f57")
-            .darken(1 - position.heightPercent)
-            .toHex()
-        );
-      } else {
-        state.scene.fog.color = new THREE.Color(
-          colord("#f7d9aa")
-            .darken(1 - position.heightPercent)
-            .toHex()
-        );
-      }
-    }
+    animateLight(position, state.scene);
   });
 
   return (
     <group>
       <mesh ref={sunRef}>
-        <meshPhongMaterial color={0xedeb27} flatShading={true} fog={true} />
+        <meshPhongMaterial
+          color={0xedeb27}
+          flatShading={true}
+          fog={false}
+          specular={0xffe9b5}
+        />
         <octahedronGeometry args={[radius, 6]} />
       </mesh>
       <mesh ref={moonRef}>
@@ -114,15 +152,6 @@ export default function Orbit() {
         />
         <octahedronGeometry args={[radius, 6]} />
       </mesh>
-      <ambientLight key="mainAmb" ref={mainAmbRef} intensity={ambIndensity} />
-      <directionalLight
-        key="mainDir"
-        ref={dirRef}
-        color={dirColor}
-        intensity={dirIndensity}
-      />
-      <ambientLight key="idleAmb" color={idleAmbColor} intensity={0.2} />
-      <directionalLight key="orbitDir" />
     </group>
   );
 }
