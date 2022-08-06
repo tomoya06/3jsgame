@@ -24,7 +24,7 @@ function App() {
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
       <Canvas>
-        <fog attach="fog" args={[0xf7d9aa, 80, 200]} />
+        <fog attach="fog" args={[0xf7d9aa, 80, 300]} />
 
         <PerspectiveCamera
           makeDefault

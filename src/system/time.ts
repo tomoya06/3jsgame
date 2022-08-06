@@ -6,6 +6,8 @@ import { GUI } from "dat.gui";
 const halfday = 12 * 60 * 60 * 1000;
 const fullDay = 24 * 60 * 60 * 1000;
 const startTime = Date.now() - halfday;
+const sunPctRange = [mj.divide(4, 24), mj.divide(20, 24)];
+
 const timeSpeed = 1000 * 3;
 const guiMocker = {
   mockTimePercent: 0.5,
@@ -32,16 +34,27 @@ const curTimeProgress = () => {
   // const ts = ((curTime - midnightTime) * timeSpeed) % fullDay;
   const ts = guiMocker.mockTimePercent * fullDay;
 
-  const isNight = ts >= halfday;
-  let percent = mj.divide(ts % halfday, halfday);
+  const percent = mj.divide(ts % halfday, halfday);
+  const dayPercent = mj.divide(ts % fullDay, fullDay);
+  const sunPercent = mj.divide(
+    dayPercent - sunPctRange[0],
+    sunPctRange[1] - sunPctRange[0]
+  );
+  const hour = Math.floor(dayPercent * 24);
+  const isSun = dayPercent >= sunPctRange[0] && dayPercent <= sunPctRange[1];
+  const isNight = !isSun;
+
   const heightPercent = mj.times(
-    mj.minus(0.5, Math.abs(mj.minus(percent, 0.5))),
+    mj.minus(0.5, Math.abs(mj.minus(sunPercent, 0.5))),
     2
   );
 
   return {
     isNight,
+    hour,
     percent,
+    sunPercent,
+    dayPercent,
     heightPercent,
   };
 };

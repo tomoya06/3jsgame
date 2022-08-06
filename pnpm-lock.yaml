@@ -13,6 +13,7 @@ specifiers:
   number-precision: ^1.5.2
   react: ^18.2.0
   react-dom: ^18.2.0
+  sky-color-generator: ^0.0.3
   three: ^0.143.0
   typescript: ^4.6.4
   vite: ^3.0.0
@@ -25,6 +26,7 @@ dependencies:
   number-precision: registry.npmmirror.com/number-precision/1.5.2
   react: registry.npmmirror.com/react/18.2.0
   react-dom: registry.npmmirror.com/react-dom/18.2.0_react@18.2.0
+  sky-color-generator: registry.npmmirror.com/sky-color-generator/0.0.3
   three: registry.npmmirror.com/three/0.143.0
 
 devDependencies:
@@ -1254,6 +1256,12 @@ packages:
     version: 1.0.4
     dev: false
 
+  registry.npmmirror.com/moment/2.29.4:
+    resolution: {integrity: sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/moment/-/moment-2.29.4.tgz}
+    name: moment
+    version: 2.29.4
+    dev: false
+
   registry.npmmirror.com/ms/2.1.2:
     resolution: {integrity: sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/ms/-/ms-2.1.2.tgz}
     name: ms
@@ -1486,6 +1494,14 @@ packages:
     version: 6.3.0
     hasBin: true
     dev: true
+
+  registry.npmmirror.com/sky-color-generator/0.0.3:
+    resolution: {integrity: sha512-eY8VLfpHViEbErxXcWsEoSJXOa/mHCq2BsyzACDTrPh276PrLXbgXv8QFjuA54KHvVTwxX0ZRRBG+rBvDXU1gA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/sky-color-generator/-/sky-color-generator-0.0.3.tgz}
+    name: sky-color-generator
+    version: 0.0.3
+    dependencies:
+      moment: registry.npmmirror.com/moment/2.29.4
+    dev: false
 
   registry.npmmirror.com/source-map-js/1.0.2:
     resolution: {integrity: sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/source-map-js/-/source-map-js-1.0.2.tgz}

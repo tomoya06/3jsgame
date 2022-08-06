@@ -6,6 +6,7 @@ import mj from "number-precision";
 import { colord } from "colord";
 import { useFrame, useThree } from "@react-three/fiber";
 import { Environment } from "@react-three/drei";
+import { getColorGradientByIndex } from "../utils/skycolor";
 
 const radius = 60,
   centerPos = [0, 0, 0],
@@ -25,7 +26,7 @@ interface LightGroup {
 type TimePositionType = ReturnType<typeof curTimeToPosition>;
 
 const curTimeToPosition = (time: TimeProgressType) => {
-  const { percent } = time;
+  const { sunPercent: percent } = time;
   let z = mj.times(fixInRange(2 * percent - 1, [-1, 1]), trackA);
   let y = mj.times(
     Math.sqrt(mj.minus(1, mj.divide(mj.times(z, z), mj.times(trackA, trackA)))),
@@ -85,19 +86,9 @@ const animateLight = (position: TimePositionType, scene: THREE.Scene) => {
   lights[subAmb].intensity = 0;
 
   if (scene.fog) {
-    if (position.isNight) {
-      scene.fog.color = new THREE.Color(
-        colord("#311f57")
-          .darken(1 - position.heightPercent)
-          .toHex()
-      );
-    } else {
-      scene.fog.color = new THREE.Color(
-        colord("#f7d9aa")
-          .darken(1 - position.heightPercent)
-          .toHex()
-      );
-    }
+    scene.fog.color = new THREE.Color(
+      getColorGradientByIndex(position.hour).toHex()
+    );
   }
 };
 
@@ -118,9 +109,9 @@ export default function Orbit() {
     const position = curTimeToPosition(timeSystem.time);
 
     if (position.isNight) {
-      moonRef.current.position.x = position.x + trackOffset[0];
-      moonRef.current.position.y = position.y + trackOffset[1];
-      moonRef.current.position.z = position.z + trackOffset[2];
+      // moonRef.current.position.x = position.x + trackOffset[0];
+      // moonRef.current.position.y = position.y + trackOffset[1];
+      // moonRef.current.position.z = position.z + trackOffset[2];
       sunRef.current.position.y = hideHeight;
     } else {
       sunRef.current.position.x = position.x + trackOffset[0];
