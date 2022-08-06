@@ -156,7 +156,6 @@ export function updateCSSGradientBasedOnNow() {
 export function setCSSGradientByIndex(nInx: number) {
   var data = grads[nInx];
   var css = toCSSGradient(data);
-  console.log(css);
 
   document.body.style.background = css;
 }

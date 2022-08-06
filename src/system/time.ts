@@ -7,7 +7,7 @@ const fullDay = 24 * 60 * 60 * 1000;
 const startTime = Date.now() - halfday;
 const sunPctRange = [mj.divide(4, 24), mj.divide(20, 24)];
 
-const timeSpeed = 1000 * 3;
+const timeSpeed = 1000 * 1;
 const guiMocker = {
   mockTimePercent: 0.5,
 };

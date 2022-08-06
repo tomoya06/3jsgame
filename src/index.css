@@ -6,3 +6,15 @@ html, body {
 body {
   transition: background-color 100ms linear;
 }
+
+
+.sky-gradient {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+}
+
+
