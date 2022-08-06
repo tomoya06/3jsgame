@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { Canvas, useFrame } from "@react-three/fiber";
 import Sky from "./contents/Sky";
 import Plane from "./contents/Plane";
+import Ground from "./contents/Ground";
 
 function Controls() {
   return useFrame(({ camera }) => {
@@ -21,6 +22,7 @@ function App() {
         <pointLight position={[10, 10, 10]} />
         <Sky />
         <Plane />
+        <Ground />
         <primitive object={new THREE.AxesHelper(10)}></primitive>
         <Controls />
       </Canvas>
