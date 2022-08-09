@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { forwardRef, Suspense, useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import timeSystem, { TimeProgressType } from "../system/time";
 import { fixInRange } from "../utils/number";
@@ -7,6 +7,14 @@ import { colord } from "colord";
 import { useFrame, useThree } from "@react-three/fiber";
 import { Environment } from "@react-three/drei";
 import { getColorGradientByIndex } from "../utils/skycolor";
+import {
+  EffectComposer,
+  GodRays,
+  Bloom,
+  Noise,
+} from "@react-three/postprocessing";
+import { BlendFunction, KernelSize, Resolution } from "postprocessing";
+import { useControls } from "leva";
 
 // TODO: GOD RAY FOR SUN
 const radius = 4,
@@ -97,8 +105,52 @@ const animateLight = (position: TimePositionType, scene: THREE.Scene) => {
   }
 };
 
-export default function Orbit() {
+const Sun = () => {
   const sunRef = useRef<THREE.Mesh>(null);
+
+  const { value: sunColor } = useControls("sun color", { value: "#ffffff" });
+
+  const { exposure, decay, blur } = useControls("PostProcessing - GodRays", {
+    exposure: {
+      value: 1,
+      min: 0,
+      max: 1,
+    },
+    decay: {
+      value: 0.8,
+      min: 0,
+      max: 1,
+      step: 0.1,
+    },
+    blur: {
+      value: 0,
+      min: 0,
+      max: 1,
+    },
+  });
+
+  return (
+    <Suspense fallback={null}>
+      <mesh ref={sunRef}>
+        <octahedronGeometry args={[radius, 6]} />
+        <meshBasicMaterial color={sunColor} />
+      </mesh>
+      {sunRef.current && (
+        <EffectComposer>
+          <GodRays
+            sun={sunRef.current}
+            decay={decay}
+            exposure={exposure}
+            blur={blur}
+          />
+        </EffectComposer>
+      )}
+    </Suspense>
+  );
+};
+
+export default function Orbit() {
+  const groupRef = useRef<THREE.Group>(null);
 
   const scene = useThree((state) => state.scene);
 
@@ -107,37 +159,26 @@ export default function Orbit() {
   }, [scene]);
 
   useFrame((state) => {
-    if (!sunRef.current) {
+    if (!groupRef.current) {
       return;
     }
     const position = curTimeToPosition(timeSystem.time);
 
     if (position.isNight) {
-      sunRef.current.position.y = hideHeight;
+      groupRef.current.position.y = hideHeight;
     } else {
-      sunRef.current.position.x = position.x + trackOffset[0];
-      sunRef.current.position.y = position.y + trackOffset[1];
-      sunRef.current.position.z = position.z + trackOffset[2];
+      groupRef.current.position.x = position.x + trackOffset[0];
+      groupRef.current.position.y = position.y + trackOffset[1];
+      groupRef.current.position.z = position.z + trackOffset[2];
     }
 
     animateLight(position, state.scene);
+    state.camera.updateProjectionMatrix();
   });
 
   return (
-    <group>
-      <mesh ref={sunRef}>
-        <meshPhongMaterial color={0xedeb27} flatShading={true} fog={false} />
-        <octahedronGeometry args={[radius, 6]} />
-      </mesh>
-      {/* <mesh ref={moonRef}>
-        <meshPhongMaterial
-          color={0x7b76ae}
-          flatShading={true}
-          fog={false}
-          specular={0xffffff}
-        />
-        <octahedronGeometry args={[radius, 6]} />
-      </mesh> */}
+    <group ref={groupRef}>
+      <Sun />
     </group>
   );
 }

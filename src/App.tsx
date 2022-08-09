@@ -3,20 +3,15 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import Sky from "./contents/Sky";
 import Plane from "./contents/Plane";
 import Ground from "./contents/Ground";
-import timeSystem from "./system/time";
+import timeSystem, { TimeSystemControls } from "./system/time";
 import Orbit from "./contents/Orbit";
 import Space from "./contents/Space";
-import { PerspectiveCamera } from "@react-three/drei";
+import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
+import { useControls } from "leva";
 
 function Controls() {
   return useFrame(({ camera }) => {
-    camera.lookAt(0, 0, 0);
-  });
-}
-
-function TimeSystemControls() {
-  return useFrame(() => {
-    timeSystem.animate();
+    camera.lookAt(200, 0, 0);
   });
 }
 
@@ -28,7 +23,7 @@ function App() {
 
         <PerspectiveCamera
           makeDefault
-          position={[-40, 10, 0]}
+          position={[100, 10, 0]}
           near={1}
           far={400}
           fov={50}
@@ -38,6 +33,7 @@ function App() {
         <Ground />
         <Orbit />
         <primitive object={new THREE.AxesHelper(10)}></primitive>
+        <OrbitControls />
         <Controls />
         <TimeSystemControls />
       </Canvas>

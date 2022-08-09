@@ -2,6 +2,8 @@ import BaseSystem from "./base";
 import mj from "number-precision";
 import { GUI } from "dat.gui";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useControls } from "leva";
+import { useFrame } from "@react-three/fiber";
 
 const halfday = 12 * 60 * 60 * 1000;
 const fullDay = 24 * 60 * 60 * 1000;
@@ -12,11 +14,6 @@ const timeSpeed = 1000 * 2;
 const guiMocker = {
   mockTimePercent: 0.5,
 };
-
-const gui = new GUI();
-const timeFolder = gui.addFolder("TIME");
-timeFolder.add(guiMocker, "mockTimePercent", 0, 1, 0.001);
-timeFolder.open();
 
 export type TimeProgressType = ReturnType<typeof curTimeProgress>;
 
@@ -104,5 +101,24 @@ export const useTimeSystem = (): [TimeProgressType, boolean] => {
 
   return [ts, isNight];
 };
+
+export function TimeSystemControls() {
+  const { timePercent } = useControls("Time System", {
+    timePercent: {
+      value: 0.5,
+      min: 0,
+      max: 1,
+      step: 0.01,
+    },
+  });
+
+  useEffect(() => {
+    guiMocker.mockTimePercent = timePercent;
+  }, [timePercent]);
+
+  return useFrame(() => {
+    timeSystem.animate();
+  });
+}
 
 export default timeSystem;
