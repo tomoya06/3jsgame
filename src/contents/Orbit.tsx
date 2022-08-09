@@ -1,22 +1,12 @@
-import { forwardRef, Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import timeSystem, { TimeProgressType } from "../system/time";
 import { fixInRange } from "../utils/number";
 import mj from "number-precision";
 import { colord } from "colord";
 import { useFrame, useThree } from "@react-three/fiber";
-import { Environment } from "@react-three/drei";
-import { getColorGradientByIndex } from "../utils/skycolor";
-import {
-  EffectComposer,
-  GodRays,
-  Bloom,
-  Noise,
-} from "@react-three/postprocessing";
-import { BlendFunction, KernelSize, Resolution } from "postprocessing";
-import { useControls } from "leva";
+import { EffectComposer, GodRays } from "@react-three/postprocessing";
 
-// TODO: GOD RAY FOR SUN
 const radius = 4,
   centerPos = [0, 0, 0],
   trackB = 180,
@@ -108,41 +98,24 @@ const animateLight = (position: TimePositionType, scene: THREE.Scene) => {
 const Sun = () => {
   const sunRef = useRef<THREE.Mesh>(null);
 
-  const { value: sunColor } = useControls("sun color", { value: "#ffffff" });
+  const [blur, setBlur] = useState(0.1);
 
-  const { exposure, decay, blur } = useControls("PostProcessing - GodRays", {
-    exposure: {
-      value: 1,
-      min: 0,
-      max: 1,
-    },
-    decay: {
-      value: 0.8,
-      min: 0,
-      max: 1,
-      step: 0.1,
-    },
-    blur: {
-      value: 0,
-      min: 0,
-      max: 1,
-    },
-  });
+  // 我唔知点解一定要加上呢句先有 god rays 射得出啊
+  useEffect(() => {
+    setTimeout(() => {
+      setBlur(0);
+    }, 0);
+  }, []);
 
   return (
     <Suspense fallback={null}>
       <mesh ref={sunRef}>
         <octahedronGeometry args={[radius, 6]} />
-        <meshBasicMaterial color={sunColor} />
+        <meshBasicMaterial color={"#ffffff"} />
       </mesh>
       {sunRef.current && (
         <EffectComposer>
-          <GodRays
-            sun={sunRef.current}
-            decay={decay}
-            exposure={exposure}
-            blur={blur}
-          />
+          <GodRays sun={sunRef.current} decay={0.8} exposure={1} blur={blur} />
         </EffectComposer>
       )}
     </Suspense>

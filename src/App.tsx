@@ -11,7 +11,7 @@ import { useControls } from "leva";
 
 function Controls() {
   return useFrame(({ camera }) => {
-    camera.lookAt(200, 0, 0);
+    camera.lookAt(0, 0, 0);
   });
 }
 
@@ -23,8 +23,8 @@ function App() {
 
         <PerspectiveCamera
           makeDefault
-          position={[100, 10, 0]}
           near={1}
+          position={[-40, 10, 0]}
           far={400}
           fov={50}
         />
