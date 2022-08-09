@@ -166,19 +166,18 @@ export default function Plane() {
       <Suspense fallback={null}>
         <primitive object={gltf.scene}></primitive>
       </Suspense>
-      {showLight && (
-        <SpotLight
-          penumbra={1}
-          angle={0.2}
-          attenuation={10}
-          intensity={10}
-          distance={10}
-          anglePower={2}
-          color="#ffe28a"
-          position={[0, -0.2, 2]}
-          ref={lightRef}
-        />
-      )}
+      <SpotLight
+        penumbra={1}
+        angle={0.2}
+        attenuation={10}
+        intensity={10}
+        distance={10}
+        scale={showLight ? 1 : 0}
+        anglePower={2}
+        color="#ffe28a"
+        position={[0, -0.2, 2]}
+        ref={lightRef}
+      />
     </group>
   );
 }

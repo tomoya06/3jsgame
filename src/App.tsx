@@ -6,7 +6,7 @@ import Ground from "./contents/Ground";
 import timeSystem, { TimeSystemControls } from "./system/time";
 import Orbit from "./contents/Orbit";
 import Space from "./contents/Space";
-import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
+import { OrbitControls, PerspectiveCamera, Stats } from "@react-three/drei";
 import { useControls } from "leva";
 
 function Controls() {
@@ -36,6 +36,7 @@ function App() {
         <OrbitControls />
         <Controls />
         <TimeSystemControls />
+        <Stats />
       </Canvas>
       <Space />
     </div>
