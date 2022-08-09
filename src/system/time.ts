@@ -9,9 +9,11 @@ const halfday = 12 * 60 * 60 * 1000;
 const fullDay = 24 * 60 * 60 * 1000;
 const startTime = Date.now() - halfday;
 const sunPctRange = [mj.divide(4, 24), mj.divide(20, 24)];
+const starPctRange = [mj.divide(8, 24), mj.divide(18, 24)];
 
 const timeSpeed = 1000 * 2;
 const guiMocker = {
+  isControl: false,
   mockTimePercent: 0.5,
 };
 
@@ -28,8 +30,9 @@ const curTimeProgress = () => {
   const midnightTime = startTime;
   const curTime = Date.now();
 
-  const ts = ((curTime - midnightTime) * timeSpeed) % fullDay;
-  // const ts = guiMocker.mockTimePercent * fullDay;
+  const ts = guiMocker.isControl
+    ? guiMocker.mockTimePercent * fullDay
+    : ((curTime - midnightTime) * timeSpeed) % fullDay;
 
   const percent = mj.divide(ts % halfday, halfday);
   const dayPercent = mj.divide(ts % fullDay, fullDay);
@@ -40,6 +43,8 @@ const curTimeProgress = () => {
   const hour = Math.floor(dayPercent * 24);
   const isSun = dayPercent >= sunPctRange[0] && dayPercent <= sunPctRange[1];
   const isNight = !isSun;
+  const noStar = dayPercent >= starPctRange[0] && dayPercent <= starPctRange[1];
+  const hasStar = !noStar;
 
   const heightPercent = mj.times(
     mj.minus(0.5, Math.abs(mj.minus(sunPercent, 0.5))),
@@ -48,6 +53,7 @@ const curTimeProgress = () => {
 
   return {
     isNight,
+    hasStar,
     hour,
     percent,
     sunPercent,
@@ -75,7 +81,7 @@ class TimeSystem extends BaseSystem {
 
 const timeSystem = new TimeSystem();
 
-export const useTimeSystem = (): [TimeProgressType, boolean] => {
+export const useTimeSystem = (): [TimeProgressType] => {
   const [ts, setTs] = useState(timeSystem.time);
   const [isNight, setNight] = useState(false);
 
@@ -99,22 +105,26 @@ export const useTimeSystem = (): [TimeProgressType, boolean] => {
     };
   }, []);
 
-  return [ts, isNight];
+  return [ts];
 };
 
 export function TimeSystemControls() {
-  const { timePercent } = useControls("Time System", {
+  const { timePercent, isControl } = useControls("Time System", {
     timePercent: {
       value: 0.5,
       min: 0,
       max: 1,
       step: 0.01,
     },
+    isControl: {
+      value: false,
+    },
   });
 
   useEffect(() => {
     guiMocker.mockTimePercent = timePercent;
-  }, [timePercent]);
+    guiMocker.isControl = isControl;
+  }, [timePercent, isControl]);
 
   return useFrame(() => {
     timeSystem.animate();

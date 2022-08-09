@@ -4,6 +4,7 @@ import * as THREE from "three";
 import { SpotLight, useAnimations, useGLTF } from "@react-three/drei";
 import { fixInRange } from "../utils/number";
 import timeSystem, { useTimeSystem } from "../system/time";
+import { Bloom, EffectComposer } from "@react-three/postprocessing";
 
 const planeSize = 2;
 const planeHeight = 0;
@@ -104,7 +105,7 @@ export default function Plane() {
     new THREE.Vector3(...defaultPosition)
   );
   const [showLight, setLight] = useState(false);
-  const [ts, isNight] = useTimeSystem();
+  const [ts] = useTimeSystem();
 
   const rotation = useMemo(() => {
     const rotateZ = speed[0] * 4 * THREE.MathUtils.degToRad(-90);

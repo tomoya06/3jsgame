@@ -8,6 +8,7 @@ import Orbit from "./contents/Orbit";
 import Space from "./contents/Space";
 import { OrbitControls, PerspectiveCamera, Stats } from "@react-three/drei";
 import { useControls } from "leva";
+import StarSky from "./contents/StarSky";
 
 function Controls() {
   return useFrame(({ camera }) => {
@@ -31,8 +32,9 @@ function App() {
         <Sky />
         <Plane />
         <Ground />
+        <StarSky />
         <Orbit />
-        <primitive object={new THREE.AxesHelper(10)}></primitive>
+        {/* <primitive object={new THREE.AxesHelper(10)}></primitive> */}
         <OrbitControls />
         <Controls />
         <TimeSystemControls />
