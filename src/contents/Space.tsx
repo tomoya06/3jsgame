@@ -1,4 +1,4 @@
-import { useFrame } from "@react-three/fiber";
+import { useFrame } from "react-three-fiber";
 import { colord } from "colord";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import timeSystem, { TimeProgressType } from "../system/time";

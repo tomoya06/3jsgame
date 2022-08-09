@@ -4,7 +4,7 @@ import timeSystem, { TimeProgressType } from "../system/time";
 import { fixInRange } from "../utils/number";
 import mj from "number-precision";
 import { colord } from "colord";
-import { useFrame, useThree } from "@react-three/fiber";
+import { useFrame, useThree } from "react-three-fiber";
 import { Environment } from "@react-three/drei";
 import { getColorGradientByIndex } from "../utils/skycolor";
 

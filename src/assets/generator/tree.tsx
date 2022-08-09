@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { ThreeElements } from "@react-three/fiber";
+import { ThreeElements } from "react-three-fiber";
 import * as React from "react";
 
 export default function Tree(props: ThreeElements["group"]) {

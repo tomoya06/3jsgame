@@ -2,7 +2,6 @@ lockfileVersion: 5.4
 
 specifiers:
   '@react-three/drei': ^9.19.5
-  '@react-three/fiber': ^8.2.2
   '@tweenjs/tween.js': ^18.6.4
   '@types/dat.gui': ^0.7.7
   '@types/react': ^18.0.15
@@ -14,20 +13,21 @@ specifiers:
   number-precision: ^1.5.2
   react: ^18.2.0
   react-dom: ^18.2.0
+  react-three-fiber: ^6.0.13
   sky-color-generator: ^0.0.3
   three: ^0.143.0
   typescript: ^4.6.4
   vite: ^3.0.0
 
 dependencies:
-  '@react-three/drei': registry.npmmirror.com/@react-three/drei/9.19.5_ll26hgvpzy7rx7d4zfmuh3rava
-  '@react-three/fiber': registry.npmmirror.com/@react-three/fiber/8.2.2_f72olm6mn3unzgg4exeiaoxanm
+  '@react-three/drei': registry.npmmirror.com/@react-three/drei/9.19.5_f72olm6mn3unzgg4exeiaoxanm
   '@tweenjs/tween.js': registry.npmmirror.com/@tweenjs/tween.js/18.6.4
   colord: registry.npmmirror.com/colord/2.9.2
   dat.gui: registry.npmmirror.com/dat.gui/0.7.9
   number-precision: registry.npmmirror.com/number-precision/1.5.2
   react: registry.npmmirror.com/react/18.2.0
   react-dom: registry.npmmirror.com/react-dom/18.2.0_react@18.2.0
+  react-three-fiber: registry.npmmirror.com/react-three-fiber/6.0.13_f72olm6mn3unzgg4exeiaoxanm
   sky-color-generator: registry.npmmirror.com/sky-color-generator/0.0.3
   three: registry.npmmirror.com/three/0.143.0
 
@@ -510,7 +510,7 @@ packages:
       react: registry.npmmirror.com/react/18.2.0
     dev: false
 
-  registry.npmmirror.com/@react-spring/three/9.5.2_2jq74qomlmyf4s5mlskfgpu2fy:
+  registry.npmmirror.com/@react-spring/three/9.5.2_react@18.2.0+three@0.143.0:
     resolution: {integrity: sha512-3H7Lv8BJZ3dajh0yJA3m9rEbqz5ZNrTCAkhVOeLqgvBlcWU5qVs4luYA1Z7H4vZnLqVtzv+kHAyg3XIpuTOXhQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@react-spring/three/-/three-9.5.2.tgz}
     id: registry.npmmirror.com/@react-spring/three/9.5.2
     name: '@react-spring/three'
@@ -524,7 +524,6 @@ packages:
       '@react-spring/core': registry.npmmirror.com/@react-spring/core/9.5.2_react@18.2.0
       '@react-spring/shared': registry.npmmirror.com/@react-spring/shared/9.5.2_react@18.2.0
       '@react-spring/types': registry.npmmirror.com/@react-spring/types/9.5.2
-      '@react-three/fiber': registry.npmmirror.com/@react-three/fiber/8.2.2_f72olm6mn3unzgg4exeiaoxanm
       react: registry.npmmirror.com/react/18.2.0
       three: registry.npmmirror.com/three/0.143.0
     dev: false
@@ -535,7 +534,7 @@ packages:
     version: 9.5.2
     dev: false
 
-  registry.npmmirror.com/@react-three/drei/9.19.5_ll26hgvpzy7rx7d4zfmuh3rava:
+  registry.npmmirror.com/@react-three/drei/9.19.5_f72olm6mn3unzgg4exeiaoxanm:
     resolution: {integrity: sha512-cIRNhZaw6TnDOjZ0SjHGKezTgEj+TKSvp/cTd5M4t5FQJslkgLEajqtjQKPoBlDvmvZ7c0pqlzWFqNU0XdoHnw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@react-three/drei/-/drei-9.19.5.tgz}
     id: registry.npmmirror.com/@react-three/drei/9.19.5
     name: '@react-three/drei'
@@ -550,8 +549,7 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.18.9
-      '@react-spring/three': registry.npmmirror.com/@react-spring/three/9.5.2_2jq74qomlmyf4s5mlskfgpu2fy
-      '@react-three/fiber': registry.npmmirror.com/@react-three/fiber/8.2.2_f72olm6mn3unzgg4exeiaoxanm
+      '@react-spring/three': registry.npmmirror.com/@react-spring/three/9.5.2_react@18.2.0+three@0.143.0
       '@use-gesture/react': registry.npmmirror.com/@use-gesture/react/10.2.17_react@18.2.0
       detect-gpu: registry.npmmirror.com/detect-gpu/4.0.33
       glsl-noise: registry.npmmirror.com/glsl-noise/0.0.0
@@ -572,11 +570,11 @@ packages:
       zustand: registry.npmmirror.com/zustand/3.7.2_react@18.2.0
     dev: false
 
-  registry.npmmirror.com/@react-three/fiber/8.2.2_f72olm6mn3unzgg4exeiaoxanm:
-    resolution: {integrity: sha512-NO/tOCYK8SQ2vuM2y2r98054X4SMGYIlHgiVRNaSo6JiXyoT3FN0aIH1nDzhDFJ5N/2C/PKa+yeg2M2/8YDFJg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@react-three/fiber/-/fiber-8.2.2.tgz}
-    id: registry.npmmirror.com/@react-three/fiber/8.2.2
+  registry.npmmirror.com/@react-three/fiber/8.3.1_f72olm6mn3unzgg4exeiaoxanm:
+    resolution: {integrity: sha512-5I1fcnE/3Y89MBNtC58N4ZEm962NqlFwBChhS09AVBz9PmD51uwY0z4y6WPMoVVKhUG39CS6iSbTPQwZygkerA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@react-three/fiber/-/fiber-8.3.1.tgz}
+    id: registry.npmmirror.com/@react-three/fiber/8.3.1
     name: '@react-three/fiber'
-    version: 8.2.2
+    version: 8.3.1
     peerDependencies:
       expo: '>=43.0'
       expo-asset: '>=8.4'
@@ -1410,6 +1408,31 @@ packages:
     version: 0.14.0
     engines: {node: '>=0.10.0'}
     dev: true
+
+  registry.npmmirror.com/react-three-fiber/6.0.13_f72olm6mn3unzgg4exeiaoxanm:
+    resolution: {integrity: sha512-uShQnkMVLvnzwf3YzY9mnzCnpmLpvTQkc0ycrtwk8fyjXmZt2695tLn3tufPF6uxq06UKJRKJcjCVCMXyUcEPQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/react-three-fiber/-/react-three-fiber-6.0.13.tgz}
+    id: registry.npmmirror.com/react-three-fiber/6.0.13
+    name: react-three-fiber
+    version: 6.0.13
+    deprecated: react-three-fiber has been deprecated, please use @react-three/fiber from now on
+    peerDependencies:
+      react: '>=17.0'
+      react-dom: '>=17.0'
+      three: '>=0.126'
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+    dependencies:
+      '@react-three/fiber': registry.npmmirror.com/@react-three/fiber/8.3.1_f72olm6mn3unzgg4exeiaoxanm
+      react: registry.npmmirror.com/react/18.2.0
+      react-dom: registry.npmmirror.com/react-dom/18.2.0_react@18.2.0
+      three: registry.npmmirror.com/three/0.143.0
+    transitivePeerDependencies:
+      - expo
+      - expo-asset
+      - expo-gl
+      - react-native
+    dev: false
 
   registry.npmmirror.com/react-use-measure/2.1.1_biqbaboplfbrettd7655fr4n2y:
     resolution: {integrity: sha512-nocZhN26cproIiIduswYpV5y5lQpSQS1y/4KuvUCjSKmw7ZWIS/+g3aFnX3WdBkyuGUtTLif3UTqnLLhbDoQig==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/react-use-measure/-/react-use-measure-2.1.1.tgz}

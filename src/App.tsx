@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame } from "react-three-fiber";
 import Sky from "./contents/Sky";
 import Plane from "./contents/Plane";
 import Ground from "./contents/Ground";

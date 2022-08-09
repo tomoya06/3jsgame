@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { ThreeElements, useFrame } from "@react-three/fiber";
+import { ThreeElements, useFrame } from "react-three-fiber";
 import * as React from "react";
 import Tree from "../assets/generator/tree";
 import { Euler, Vector3 } from "three";

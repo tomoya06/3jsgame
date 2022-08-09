@@ -1,4 +1,4 @@
-import { useFrame } from "@react-three/fiber";
+import { useFrame } from "react-three-fiber";
 import { useMemo, useRef } from "react";
 import * as THREE from "three";
 import Cloud from "../assets/generator/cloud";
@@ -54,7 +54,7 @@ export default function Sky() {
       return;
     }
     myMesh.current.rotation.x -= 0.00005;
-  })
+  });
 
   return (
     <group ref={myMesh} position={[-(width / 3), 2 - radius, 0]}>

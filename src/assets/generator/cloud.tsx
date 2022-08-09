@@ -1,4 +1,4 @@
-import { ThreeElements } from "@react-three/fiber";
+import { ThreeElements } from "react-three-fiber";
 import * as THREE from "three";
 
 const cloudGeo = new THREE.DodecahedronGeometry(1, 0);
@@ -37,7 +37,10 @@ export default function Cloud(props: ThreeElements["group"]) {
   return (
     <group {...props}>
       {blocsPos.map(({ x, y, z }) => (
-        <CloudBlock key={`cb_${x}_${y}_${z}`} position={new THREE.Vector3(x, y, z)}></CloudBlock>
+        <CloudBlock
+          key={`cb_${x}_${y}_${z}`}
+          position={new THREE.Vector3(x, y, z)}
+        ></CloudBlock>
       ))}
     </group>
   );
