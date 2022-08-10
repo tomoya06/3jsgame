@@ -18,7 +18,24 @@ const defaultPosition = [0, planeHeight, 0];
 
 const accumulateKeys = [87, 83, 65, 68, 81, 69];
 
-const calcAcc = (isKeyDown: boolean[], delta: number) => {
+let outerShowLight = false;
+const isKeyDown: boolean[] = Array(255).fill(false);
+
+const updateKeyDown = (keycode: number, flag: boolean) => {
+  isKeyDown[keycode] = flag;
+};
+
+const handleKeyDown = (keycode: number, flag: boolean) => {
+  if (!flag) {
+    return;
+  }
+
+  if (keycode === 76) {
+    outerShowLight = !outerShowLight;
+  }
+};
+
+const calcAcc = (delta: number) => {
   const acce = [0, 0, 0];
 
   const accDelta = normalizeSpeed(accerate, delta);
@@ -83,8 +100,6 @@ const calcSpeed = (
     }
   }
 
-  // newSpeed = newSpeed.map((sp) => normalizeSpeed(sp, delta));
-
   const newPosition = [
     curPosition.x + newSpeed[0],
     curPosition.y + newSpeed[1],
@@ -106,12 +121,11 @@ const calcSpeed = (
 };
 
 export default function Plane() {
-  const [isKeyDown, setKeyDown] = useState<boolean[]>(Array(255).fill(false));
   const [speed, setSpeed] = useState([0, 0, 0]);
   const [position, setPosition] = useState(
     new THREE.Vector3(...defaultPosition)
   );
-  const [showLight, setLight] = useState(false);
+  const [showLight, setLight] = useState(outerShowLight);
   const [ts] = useTimeSystem();
 
   const rotation = useMemo(() => {
@@ -120,12 +134,6 @@ export default function Plane() {
 
     return new THREE.Euler(rotateX, 0, rotateZ);
   }, [speed]);
-
-  const updateKeyDown = (keycode: number, flag: boolean) => {
-    const newKeyDown = [...isKeyDown];
-    newKeyDown[keycode] = flag;
-    setKeyDown(newKeyDown);
-  };
 
   const gltf = useGLTF("src/assets/models/cartoon_plane/scene.gltf");
   const mixer = useMemo(() => new THREE.AnimationMixer(gltf.scene), [gltf]);
@@ -139,6 +147,8 @@ export default function Plane() {
     onkeydown = onkeyup = (e) => {
       if (accumulateKeys.includes(e.keyCode)) {
         updateKeyDown(e.keyCode, e.type === "keydown");
+      } else {
+        handleKeyDown(e.keyCode, e.type === "keydown");
       }
     };
   }, []);
@@ -154,7 +164,7 @@ export default function Plane() {
   }, [lightRef, position, rotation]);
 
   useFrame((state, delta) => {
-    const acce = calcAcc(isKeyDown, delta);
+    const acce = calcAcc(delta);
     const { newPosition, newSpeed, mixerSpeed } = calcSpeed(
       speed,
       acce,
@@ -164,10 +174,13 @@ export default function Plane() {
     setPosition(newPosition);
     setSpeed(newSpeed);
     mixer.update(delta * mixerSpeed);
+
+    // setLight 建立与 react 的桥梁
+    setLight(outerShowLight);
   });
 
   useEffect(() => {
-    setLight(ts.isNight);
+    outerShowLight = ts.isNight;
   }, [ts.isNight]);
 
   return (
