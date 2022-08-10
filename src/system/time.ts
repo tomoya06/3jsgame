@@ -1,7 +1,6 @@
 import BaseSystem from "./base";
 import mj from "number-precision";
-import { GUI } from "dat.gui";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useControls } from "leva";
 import { useFrame } from "@react-three/fiber";
 
