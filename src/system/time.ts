@@ -13,7 +13,7 @@ const starPctRange = [mj.divide(8, 24), mj.divide(18, 24)];
 
 const timeSpeed = 1000 * 2;
 const guiMocker = {
-  isControl: false,
+  isControl: true,
   mockTimePercent: 0.5,
 };
 
@@ -117,7 +117,7 @@ export function TimeSystemControls() {
       step: 0.01,
     },
     isControl: {
-      value: false,
+      value: true,
     },
   });
 

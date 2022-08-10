@@ -2,7 +2,7 @@ import { useFrame, useLoader } from "@react-three/fiber";
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { SpotLight, useAnimations, useGLTF } from "@react-three/drei";
-import { fixInRange } from "../utils/number";
+import { fixInRange, normalizeSpeed } from "../utils/number";
 import timeSystem, { useTimeSystem } from "../system/time";
 import { Bloom, EffectComposer } from "@react-three/postprocessing";
 
@@ -18,33 +18,35 @@ const defaultPosition = [0, planeHeight, 0];
 
 const accumulateKeys = [87, 83, 65, 68, 81, 69];
 
-const calcAcc = (isKeyDown: boolean[]) => {
+const calcAcc = (isKeyDown: boolean[], delta: number) => {
   const acce = [0, 0, 0];
+
+  const accDelta = normalizeSpeed(accerate, delta);
 
   // https://www.toptal.com/developers/keycode/for/s
   if (isKeyDown[87]) {
     // w
-    acce[2] += accerate;
+    acce[2] += accDelta;
   }
   if (isKeyDown[83]) {
     // s
-    acce[2] -= accerate;
+    acce[2] -= accDelta;
   }
   if (isKeyDown[65]) {
     // a
-    acce[0] += accerate;
+    acce[0] += accDelta;
   }
   if (isKeyDown[68]) {
     // d
-    acce[0] -= accerate;
+    acce[0] -= accDelta;
   }
   if (isKeyDown[81]) {
     // q
-    acce[1] += accerate;
+    acce[1] += accDelta;
   }
   if (isKeyDown[69]) {
     // e
-    acce[1] -= accerate;
+    acce[1] -= accDelta;
   }
 
   return acce;
@@ -53,9 +55,12 @@ const calcAcc = (isKeyDown: boolean[]) => {
 const calcSpeed = (
   curSpeed: number[],
   acce: number[],
-  curPosition: THREE.Vector3
+  curPosition: THREE.Vector3,
+  delta: number
 ) => {
-  const newSpeed = [...curSpeed];
+  const decDelta = normalizeSpeed(decerate, delta);
+
+  let newSpeed = [...curSpeed];
   for (let axis = 0; axis <= 2; axis++) {
     const axisSpeed = newSpeed[axis];
     const curAcce = acce[axis];
@@ -70,13 +75,15 @@ const calcSpeed = (
       continue;
     }
     if (axisSpeed < 0) {
-      const axisNewSpeed = Math.min(axisSpeed + decerate, 0);
+      const axisNewSpeed = Math.min(axisSpeed + decDelta, 0);
       newSpeed[axis] = axisNewSpeed;
     } else if (axisSpeed > 0) {
-      const axisNewSpeed = Math.max(axisSpeed - decerate, 0);
+      const axisNewSpeed = Math.max(axisSpeed - decDelta, 0);
       newSpeed[axis] = axisNewSpeed;
     }
   }
+
+  // newSpeed = newSpeed.map((sp) => normalizeSpeed(sp, delta));
 
   const newPosition = [
     curPosition.x + newSpeed[0],
@@ -147,11 +154,12 @@ export default function Plane() {
   }, [lightRef, position, rotation]);
 
   useFrame((state, delta) => {
-    const acce = calcAcc(isKeyDown);
+    const acce = calcAcc(isKeyDown, delta);
     const { newPosition, newSpeed, mixerSpeed } = calcSpeed(
       speed,
       acce,
-      position
+      position,
+      delta
     );
     setPosition(newPosition);
     setSpeed(newSpeed);
