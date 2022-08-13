@@ -1,32 +1,16 @@
 import * as THREE from "three";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas } from "@react-three/fiber";
 import Sky from "./contents/Sky";
 import Plane from "./contents/Plane";
 import Ground from "./contents/Ground";
-import timeSystem, { TimeSystemControls } from "./system/time";
+import { TimeSystemControls } from "./system/time";
 import Orbit from "./contents/Orbit";
 import Space from "./contents/Space";
-import {
-  CameraShake,
-  OrbitControls,
-  PerspectiveCamera,
-  Stats,
-} from "@react-three/drei";
-import { useControls } from "leva";
+import { OrbitControls, Stats } from "@react-three/drei";
 import StarSky from "./contents/StarSky";
-import {
-  DepthOfField,
-  EffectComposer,
-  GodRays,
-} from "@react-three/postprocessing";
-import { useEffect, useRef, useState } from "react";
-import { useKeyCtrl } from "./system/keyctrl";
-
-function Controls() {
-  return useFrame(({ camera }) => {
-    camera.lookAt(0, 0, 0);
-  });
-}
+import { EffectComposer, GodRays } from "@react-three/postprocessing";
+import { useState } from "react";
+import CameraCtrl from "./contents/CameraCtrl";
 
 function App() {
   const [sunCur, setSunCur] = useState<THREE.Mesh | null>(null);
@@ -34,16 +18,12 @@ function App() {
 
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
-      <Canvas style={{ zIndex: 2 }}>
+      <Canvas
+        style={{ zIndex: 2 }}
+        camera={{ position: [-40, 10, 0], far: 400, fov: 50, near: 1 }}
+      >
         <fog attach="fog" args={[0xf7d9aa, 80, 240]} />
 
-        <PerspectiveCamera
-          makeDefault
-          near={1}
-          position={[-40, 10, 0]}
-          far={400}
-          fov={50}
-        />
         <Sky />
         <Plane />
         <Ground />
@@ -64,9 +44,9 @@ function App() {
         </EffectComposer>
         {/* <primitive object={new THREE.AxesHelper(10)}></primitive> */}
         <OrbitControls />
-        <Controls />
         <TimeSystemControls />
         <Stats />
+        <CameraCtrl />
       </Canvas>
       <Space />
     </div>
