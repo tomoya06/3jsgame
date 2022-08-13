@@ -1,20 +1,21 @@
 import { ThreeElements, useFrame } from "@react-three/fiber";
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import * as TWEEN from "@tweenjs/tween.js";
 import { randomInRange } from "../utils/number";
 import { animate } from "../utils/animate";
+import { outerSpeeeed } from "../system/keyctrl";
 
-export default function PlaneJet(
-  props: ThreeElements["group"] & {
-    count: number;
-  }
-) {
-  const { count } = props;
+const count = 30,
+  duration = 600,
+  delay = duration / count;
+
+export default function PlaneJet(props: ThreeElements["group"]) {
   const mesh = useRef<THREE.InstancedMesh>(null);
   const dummy = useMemo(() => new THREE.Object3D(), []);
+  const [isSpeeeed, setSpeeed] = useState(outerSpeeeed);
 
-  const triggerAnimate = useCallback((i: number) => {
+  const triggerAnimate = useCallback((i: number, needDelay: boolean) => {
     dummy.position.set(0, 0, 0);
     dummy.scale.set(0, 0, 0);
     dummy.updateMatrix();
@@ -23,7 +24,7 @@ export default function PlaneJet(
     const target = {
       x: randomInRange(-0.4, 0.4),
       y: randomInRange(-0.4, 0.4),
-      z: -10,
+      z: randomInRange(-9, -11),
       rotZ: randomInRange(Math.PI * 0.3, Math.PI * 0.5),
       scale: randomInRange(0.9, 1),
     };
@@ -35,8 +36,8 @@ export default function PlaneJet(
       rotZ: 0,
       scale: 0,
     })
-      .to(target, 1000)
-      .delay(i * 10)
+      .to(target, duration)
+      .delay(needDelay ? i * delay : 0)
       .easing(TWEEN.Easing.Linear.None)
       .onUpdate((props) => {
         dummy.position.set(props.x, props.y, props.z);
@@ -53,17 +54,26 @@ export default function PlaneJet(
         dummy.scale.set(0, 0, 0);
         dummy.updateMatrix();
         mesh.current?.setMatrixAt(i, dummy.matrix);
-        triggerAnimate(i);
+        if (outerSpeeeed) {
+          triggerAnimate(i, false);
+        }
       })
       .start();
   }, []);
 
+  useFrame(() => {
+    setSpeeed(outerSpeeeed);
+  });
+
   useEffect(() => {
+    if (!isSpeeeed) {
+      return;
+    }
     for (let i = 0; i < count; i++) {
-      triggerAnimate(i);
+      triggerAnimate(i, true);
     }
     animate();
-  }, [count]);
+  }, [isSpeeeed]);
 
   return (
     <group {...props}>

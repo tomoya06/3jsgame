@@ -1,21 +1,25 @@
 import { Tween } from "@tweenjs/tween.js";
 
+const defaultSpeed = 1,
+  maxSpeed = 20,
+  duration = maxSpeed * 10;
+
 class WorldSpin {
   private _speed: number;
 
   constructor() {
-    this._speed = 1;
+    this._speed = defaultSpeed;
   }
 
   speedup() {
     new Tween({
-      sp: 1,
+      sp: this._speed,
     })
       .to(
         {
-          sp: 10,
+          sp: maxSpeed,
         },
-        200
+        duration
       )
       .onUpdate(({ sp }) => {
         this._speed = sp;
@@ -29,9 +33,9 @@ class WorldSpin {
     })
       .to(
         {
-          sp: 1,
+          sp: defaultSpeed,
         },
-        200
+        duration
       )
       .onUpdate(({ sp }) => {
         this._speed = sp;

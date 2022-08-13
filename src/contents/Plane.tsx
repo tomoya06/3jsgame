@@ -102,7 +102,7 @@ export default function Plane() {
         />
       </group>
       <group position={tailPosition}>
-        <PlaneJet count={20} position={[0, -0.2, 0]} />
+        <PlaneJet position={[0, -0.2, 0]} />
       </group>
     </>
   );
