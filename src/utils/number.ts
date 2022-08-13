@@ -12,6 +12,10 @@ export function fixInRange(target: number, range: [number, number]) {
   return target;
 }
 
+export function randomInRange(low: number, hi: number) {
+  return low + Math.random() * (hi - low);
+}
+
 export function normalizeSpeed(num: number, delta: number) {
   // console.log("normalizeSpeed", delta);
   return mj.times(mj.times(num, 60), delta);

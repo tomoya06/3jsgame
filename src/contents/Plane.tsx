@@ -11,6 +11,7 @@ import {
   outerShowLight,
   updateOuterLight,
 } from "../system/planectrl";
+import PlaneJet from "./PlaneJet";
 
 const planeSize = 2;
 
@@ -20,6 +21,7 @@ export default function Plane() {
     new THREE.Vector3(...defaultPosition)
   );
   const [showLight, setLight] = useState(outerShowLight);
+  const tailRef = useRef<THREE.Mesh>(null);
   const [ts] = useTimeSystem();
 
   const rotation = useMemo(() => {
@@ -28,6 +30,12 @@ export default function Plane() {
 
     return new THREE.Euler(rotateX, 0, rotateZ);
   }, [speed]);
+
+  const tailPosition = useMemo(() => {
+    const tp = new THREE.Vector3();
+    tailRef.current?.getWorldPosition(tp);
+    return tp;
+  }, [position]);
 
   const gltf = useGLTF("src/assets/models/cartoon_plane/scene.gltf");
   const mixer = useMemo(() => new THREE.AnimationMixer(gltf.scene), [gltf]);
@@ -74,22 +82,28 @@ export default function Plane() {
   }, [ts.isNight]);
 
   return (
-    <group position={position} rotation={rotation}>
-      <Suspense fallback={null}>
-        <primitive object={gltf.scene}></primitive>
-      </Suspense>
-      <SpotLight
-        penumbra={1}
-        angle={0.2}
-        attenuation={10}
-        intensity={10}
-        distance={10}
-        scale={showLight ? 1 : 0}
-        anglePower={2}
-        color="#ffe28a"
-        position={[0, -0.2, 2]}
-        ref={lightRef}
-      />
-    </group>
+    <>
+      <group position={position} rotation={rotation}>
+        <Suspense fallback={null}>
+          <primitive object={gltf.scene}></primitive>
+        </Suspense>
+        <mesh ref={tailRef} position={[0, 0, -1.2]}></mesh>
+        <SpotLight
+          penumbra={1}
+          angle={0.2}
+          attenuation={10}
+          intensity={10}
+          distance={10}
+          scale={showLight ? 1 : 0}
+          anglePower={2}
+          color="#ffe28a"
+          position={[0, -0.2, 2]}
+          ref={lightRef}
+        />
+      </group>
+      <group position={tailPosition}>
+        <PlaneJet count={20} position={[0, -0.2, 0]} />
+      </group>
+    </>
   );
 }

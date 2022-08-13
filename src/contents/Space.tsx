@@ -4,12 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import timeSystem, { TimeProgressType } from "../system/time";
 import { setCSSGradientByIndex } from "../utils/skycolor";
 import * as TWEEN from "@tweenjs/tween.js";
-
-const animate = () => {
-  if (TWEEN.update()) {
-    requestAnimationFrame(animate);
-  }
-};
+import { animate } from "../utils/animate";
 
 export default function Space() {
   const [curHour, setCurHour] = useState(0);
