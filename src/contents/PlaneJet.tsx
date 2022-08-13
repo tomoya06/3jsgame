@@ -23,9 +23,9 @@ export default function PlaneJet(
     const target = {
       x: randomInRange(-0.4, 0.4),
       y: randomInRange(-0.4, 0.4),
-      z: randomInRange(-20, -20),
+      z: -10,
       rotZ: randomInRange(Math.PI * 0.3, Math.PI * 0.5),
-      scale: randomInRange(0.9, 1.2),
+      scale: randomInRange(0.9, 1),
     };
 
     new TWEEN.Tween({
@@ -74,7 +74,7 @@ export default function PlaneJet(
         ></sphereGeometry>
         <meshLambertMaterial
           attach="material"
-          color={0xe3e3e3}
+          color={0x696969}
         ></meshLambertMaterial>
       </instancedMesh>
     </group>
