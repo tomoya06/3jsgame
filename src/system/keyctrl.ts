@@ -1,6 +1,8 @@
 import { fixInRange, normalizeSpeed } from "../utils/number";
 import * as THREE from "three";
 import worldspin from "./worldspin";
+import { useState } from "react";
+import { useFrame } from "@react-three/fiber";
 
 const planeHeight = 0;
 
@@ -15,6 +17,18 @@ export const defaultPosition = [0, planeHeight, 0];
 
 export let outerShowLight = false;
 export let outerSpeeeed = false;
+
+export function useKeyCtrl() {
+  const [showLight, setShowLight] = useState(outerShowLight);
+  const [isSpeeeed, setSpeeeed] = useState(outerSpeeeed);
+
+  useFrame(() => {
+    setShowLight(outerShowLight);
+    setSpeeeed(outerSpeeeed);
+  });
+
+  return [showLight, isSpeeeed];
+}
 
 const isKeyDown: boolean[] = Array(255).fill(false);
 const isKeyDisabled: boolean[] = Array(255).fill(false);

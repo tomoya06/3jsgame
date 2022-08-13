@@ -1,11 +1,10 @@
-import { Suspense, useEffect, useRef, useState } from "react";
+import { forwardRef, Suspense, useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import timeSystem, { TimeProgressType } from "../system/time";
 import { fixInRange } from "../utils/number";
 import mj from "number-precision";
 import { colord } from "colord";
 import { useFrame, useThree } from "@react-three/fiber";
-import { EffectComposer, GodRays } from "@react-three/postprocessing";
 
 const radius = 4,
   centerPos = [0, 0, 0],
@@ -95,36 +94,8 @@ const animateLight = (position: TimePositionType, scene: THREE.Scene) => {
   }
 };
 
-const Sun = () => {
-  const sunRef = useRef<THREE.Mesh>(null);
-
-  const [blur, setBlur] = useState(0.1);
-
-  // 我唔知点解一定要加上呢句先有 god rays 射得出啊
-  useEffect(() => {
-    setTimeout(() => {
-      setBlur(0);
-    }, 0);
-  }, []);
-
-  return (
-    <Suspense fallback={null}>
-      <mesh ref={sunRef}>
-        <octahedronGeometry args={[radius, 6]} />
-        <meshBasicMaterial color={"#ffffff"} />
-      </mesh>
-      {sunRef.current && (
-        <EffectComposer>
-          <GodRays sun={sunRef.current} decay={0.8} exposure={1} blur={blur} />
-        </EffectComposer>
-      )}
-    </Suspense>
-  );
-};
-
-export default function Orbit() {
+const Orbit = forwardRef<THREE.Mesh>((props, outerRef) => {
   const groupRef = useRef<THREE.Group>(null);
-
   const scene = useThree((state) => state.scene);
 
   useEffect(() => {
@@ -132,7 +103,7 @@ export default function Orbit() {
   }, [scene]);
 
   useFrame((state) => {
-    if (!groupRef.current) {
+    if (!groupRef?.current) {
       return;
     }
     const position = curTimeToPosition(timeSystem.time);
@@ -151,7 +122,12 @@ export default function Orbit() {
 
   return (
     <group ref={groupRef}>
-      <Sun />
+      <mesh ref={outerRef}>
+        <octahedronGeometry args={[radius, 6]} />
+        <meshBasicMaterial color={0xfaf6e1} />
+      </mesh>
     </group>
   );
-}
+});
+
+export default Orbit;

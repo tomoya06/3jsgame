@@ -6,9 +6,21 @@ import Ground from "./contents/Ground";
 import timeSystem, { TimeSystemControls } from "./system/time";
 import Orbit from "./contents/Orbit";
 import Space from "./contents/Space";
-import { OrbitControls, PerspectiveCamera, Stats } from "@react-three/drei";
+import {
+  CameraShake,
+  OrbitControls,
+  PerspectiveCamera,
+  Stats,
+} from "@react-three/drei";
 import { useControls } from "leva";
 import StarSky from "./contents/StarSky";
+import {
+  DepthOfField,
+  EffectComposer,
+  GodRays,
+} from "@react-three/postprocessing";
+import { useEffect, useRef, useState } from "react";
+import { useKeyCtrl } from "./system/keyctrl";
 
 function Controls() {
   return useFrame(({ camera }) => {
@@ -17,6 +29,9 @@ function Controls() {
 }
 
 function App() {
+  const [sunCur, setSunCur] = useState<THREE.Mesh | null>(null);
+  const [blur, setBlur] = useState(0.1);
+
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
       <Canvas style={{ zIndex: 2 }}>
@@ -33,7 +48,20 @@ function App() {
         <Plane />
         <Ground />
         <StarSky />
-        <Orbit />
+        <Orbit
+          ref={(node) => {
+            setSunCur(node);
+            setBlur(0);
+          }}
+        />
+
+        <EffectComposer>
+          {sunCur ? (
+            <GodRays sun={sunCur} decay={0.8} exposure={1} blur={blur} />
+          ) : (
+            <></>
+          )}
+        </EffectComposer>
         {/* <primitive object={new THREE.AxesHelper(10)}></primitive> */}
         <OrbitControls />
         <Controls />

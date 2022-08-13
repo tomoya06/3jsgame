@@ -8,8 +8,8 @@ import {
   calcSpeed,
   defaultPosition,
   onKeyHandler,
-  outerShowLight,
   updateOuterLight,
+  useKeyCtrl,
 } from "../system/keyctrl";
 import PlaneJet from "./PlaneJet";
 
@@ -20,7 +20,7 @@ export default function Plane() {
   const [position, setPosition] = useState(
     new THREE.Vector3(...defaultPosition)
   );
-  const [showLight, setLight] = useState(outerShowLight);
+  const [showLight] = useKeyCtrl();
   const tailRef = useRef<THREE.Mesh>(null);
   const [ts] = useTimeSystem();
 
@@ -72,9 +72,6 @@ export default function Plane() {
     setPosition(newPosition);
     setSpeed(newSpeed);
     mixer.update(delta * mixerSpeed);
-
-    // setLight 建立与 react 的桥梁
-    setLight(outerShowLight);
   });
 
   useEffect(() => {
