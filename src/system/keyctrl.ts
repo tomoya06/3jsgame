@@ -1,5 +1,6 @@
 import { fixInRange, normalizeSpeed } from "../utils/number";
 import * as THREE from "three";
+import worldspin from "./worldspin";
 
 const planeHeight = 0;
 
@@ -13,7 +14,10 @@ const accumulateKeys = [87, 83, 65, 68, 81, 69];
 export const defaultPosition = [0, planeHeight, 0];
 
 export let outerShowLight = false;
+export let outerSpeeeed = false;
+
 const isKeyDown: boolean[] = Array(255).fill(false);
+const isKeyDisabled: boolean[] = Array(255).fill(false);
 
 const updateKeyDown = (keycode: number, flag: boolean) => {
   isKeyDown[keycode] = flag;
@@ -26,6 +30,17 @@ const handleKeyDown = (keycode: number, flag: boolean) => {
 
   if (keycode === 76) {
     outerShowLight = !outerShowLight;
+  }
+
+  if (keycode === 80 && !isKeyDisabled[keycode]) {
+    isKeyDisabled[keycode] = true;
+    worldspin.speedup();
+    outerSpeeeed = true;
+    setTimeout(() => {
+      worldspin.resetSpeed();
+      isKeyDisabled[keycode] = false;
+      outerSpeeeed = false;
+    }, 5000);
   }
 };
 

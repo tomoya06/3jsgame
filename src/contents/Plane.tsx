@@ -10,7 +10,7 @@ import {
   onKeyHandler,
   outerShowLight,
   updateOuterLight,
-} from "../system/planectrl";
+} from "../system/keyctrl";
 import PlaneJet from "./PlaneJet";
 
 const planeSize = 2;

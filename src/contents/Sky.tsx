@@ -2,6 +2,7 @@ import { useFrame } from "@react-three/fiber";
 import { useMemo, useRef } from "react";
 import * as THREE from "three";
 import Cloud from "../assets/generator/cloud";
+import worldspin from "../system/worldspin";
 
 const radius = 1000,
   width = 140,
@@ -53,8 +54,8 @@ export default function Sky() {
     if (!myMesh.current) {
       return;
     }
-    myMesh.current.rotation.x -= 0.00005;
-  })
+    myMesh.current.rotation.x -= 0.00005 * worldspin.speed;
+  });
 
   return (
     <group ref={myMesh} position={[-(width / 3), 2 - radius, 0]}>

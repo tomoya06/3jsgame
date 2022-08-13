@@ -3,6 +3,7 @@ import { ThreeElements, useFrame } from "@react-three/fiber";
 import * as React from "react";
 import Tree from "../assets/generator/tree";
 import { Euler, Vector3 } from "three";
+import worldspin from "../system/worldspin";
 
 const radius = 1000,
   width = 200,
@@ -45,7 +46,7 @@ export default function Ground() {
 
   useFrame(() => {
     if (groudRef.current) {
-      groudRef.current.rotation.x -= 0.00002;
+      groudRef.current.rotation.x -= 0.00002 * worldspin.speed;
     }
   });
 
