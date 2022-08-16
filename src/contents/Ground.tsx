@@ -10,9 +10,7 @@ const radius = 1000,
   degDelta = 2,
   widthDelta = width / 5;
 
-export default function Ground() {
-  const groudRef = React.useRef<THREE.Group>(null);
-
+function Trees() {
   const trees = React.useMemo(() => {
     const output: { pos: Vector3; rotx: Euler; key: string }[] = [];
     for (let i = 0; i < 360; i += degDelta) {
@@ -44,6 +42,37 @@ export default function Ground() {
     return output;
   }, []);
 
+  return (
+    <>
+      {trees.map((treeConf) => (
+        <Tree
+          key={`${treeConf.key}`}
+          position={treeConf.pos}
+          rotation={treeConf.rotx}
+        />
+      ))}
+    </>
+  );
+}
+
+function GroundMesh() {
+  const groudMeshRef = React.useRef<THREE.Mesh>(null);
+
+  return (
+    <mesh
+      position={[width / 2, 0, 0]}
+      rotation={[0, 0, 0.5 * Math.PI]}
+      ref={groudMeshRef}
+    >
+      <cylinderGeometry args={[radius, radius, width, radius * 2]} />
+      <meshPhongMaterial color={0x6f9e72}></meshPhongMaterial>
+    </mesh>
+  );
+}
+
+export default function Ground() {
+  const groudRef = React.useRef<THREE.Group>(null);
+
   useFrame(() => {
     if (groudRef.current) {
       groudRef.current.rotation.x -= 0.00002 * worldspin.speed;
@@ -52,17 +81,8 @@ export default function Ground() {
 
   return (
     <group position={[-(width / 3), -10 - radius, 0]} ref={groudRef}>
-      {trees.map((treeConf) => (
-        <Tree
-          key={`${treeConf.key}`}
-          position={treeConf.pos}
-          rotation={treeConf.rotx}
-        />
-      ))}
-      <mesh position={[width / 2, 0, 0]} rotation={[0, 0, 0.5 * Math.PI]}>
-        <cylinderGeometry args={[radius, radius, width, radius * 2]} />
-        <meshPhongMaterial color={0x6f9e72}></meshPhongMaterial>
-      </mesh>
+      <Trees />
+      <GroundMesh />
     </group>
   );
 }
