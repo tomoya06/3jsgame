@@ -2,71 +2,86 @@ import * as THREE from "three";
 import { ThreeElements, useFrame } from "@react-three/fiber";
 import * as React from "react";
 import Tree from "../assets/generator/tree";
-import { Euler, Vector3 } from "three";
+import { Euler, Quaternion, Vector3 } from "three";
 import worldspin from "../system/worldspin";
 
 const radius = 1000,
   width = 200,
   degDelta = 2,
   widthDelta = width / 5;
+const groundCenter: [number, number, number] = [-(width / 3), -10 - radius, 0];
 
-function Trees() {
-  const trees = React.useMemo(() => {
-    const output: { pos: Vector3; rotx: Euler; key: string }[] = [];
-    for (let i = 0; i < 360; i += degDelta) {
-      const curDeg = THREE.MathUtils.degToRad(i);
-
-      const treeCnt = Math.floor(Math.random() * widthDelta);
-      const positions = new Set(
-        Array(treeCnt)
-          .fill(1)
-          .map((_) => Math.floor(Math.random() * width))
-      );
-
-      [...positions].forEach((pos) => {
-        const x = pos;
-
-        const rotateX = curDeg + (Math.random() * degDelta - degDelta / 2);
-        const rotateY = Math.random() * 0.2 * Math.PI;
-        const radiusH = radius;
-        const z = radiusH * Math.sin(rotateX),
-          y = radiusH * Math.cos(rotateX);
-
-        output.push({
-          key: `tree_${x}_${y}_${z}`,
-          pos: new Vector3(x, y, z),
-          rotx: new Euler(rotateX, rotateY, 0),
-        });
-      });
-    }
-    return output;
-  }, []);
-
-  return (
-    <>
-      {trees.map((treeConf) => (
-        <Tree
-          key={`${treeConf.key}`}
-          position={treeConf.pos}
-          rotation={treeConf.rotx}
-        />
-      ))}
-    </>
-  );
+interface IVertices {
+  [index: string]: {
+    x: number;
+    y: number;
+    z: number;
+  };
 }
 
 function GroundMesh() {
   const groudMeshRef = React.useRef<THREE.Mesh>(null);
+  const treeGroupRef = React.useRef<THREE.Group>(null);
+  const trees = React.useMemo(() => {
+    const output: { rot: Euler; pos: Vector3; key: string }[] = [];
+
+    if (!groudMeshRef.current) {
+      return output;
+    }
+
+    const positionAttribute =
+      groudMeshRef.current.geometry.getAttribute("position");
+    const point = new Vector3();
+    const visited = new Set();
+    const quaternion = new THREE.Quaternion();
+
+    // https://stackoverflow.com/a/67865461/8356786
+    // Go thru all points and collect points on same vertex with a hashmap
+    for (let i = 0; i < positionAttribute.count; i += 0) {
+      point.fromBufferAttribute(positionAttribute, i);
+
+      const key = [point.x, point.y, point.z].join(",");
+      if (visited.has(key)) {
+        continue;
+      }
+      visited.add(key);
+      const pos = new Vector3(point.x, point.y, point.z);
+      const rot = new Euler();
+      output.push({
+        key,
+        pos,
+        rot,
+      });
+
+      i += Math.floor(Math.random() * 200 + 300);
+    }
+
+    return output;
+  }, [groudMeshRef.current]);
+
+  React.useEffect(() => {
+    if (!treeGroupRef.current) {
+      return;
+    }
+
+    treeGroupRef.current.children.forEach((obj) => {
+      obj.lookAt(...groundCenter);
+    });
+  }, [treeGroupRef.current?.children]);
 
   return (
-    <mesh
-      position={[width / 2, 0, 0]}
-      rotation={[0, 0, 0.5 * Math.PI]}
-      ref={groudMeshRef}
-    >
-      <cylinderGeometry args={[radius, radius, width, radius * 2]} />
-      <meshPhongMaterial color={0x6f9e72}></meshPhongMaterial>
-    </mesh>
+    <>
+      <mesh rotation={[0, 0, 0.5 * Math.PI]} ref={groudMeshRef}>
+        <sphereGeometry args={[radius, radius / 4, radius / 4]} />
+        <meshPhongMaterial color={0x6f9e72}></meshPhongMaterial>
+      </mesh>
+
+      <group ref={treeGroupRef}>
+        {trees.map((treeConf) => (
+          <Tree key={`${treeConf.key}`} position={treeConf.pos}></Tree>
+        ))}
+      </group>
+    </>
   );
 }
 
@@ -80,8 +95,7 @@ export default function Ground() {
   });
 
   return (
-    <group position={[-(width / 3), -10 - radius, 0]} ref={groudRef}>
-      <Trees />
+    <group position={groundCenter} ref={groudRef}>
       <GroundMesh />
     </group>
   );

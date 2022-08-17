@@ -1,7 +1,7 @@
 import { Tween } from "@tweenjs/tween.js";
 
 const defaultSpeed = 1,
-  maxSpeed = 20,
+  maxSpeed = 100,
   duration = maxSpeed * 10;
 
 class WorldSpin {

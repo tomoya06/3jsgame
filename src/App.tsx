@@ -12,6 +12,8 @@ import { EffectComposer, GodRays } from "@react-three/postprocessing";
 import { useState } from "react";
 import CameraCtrl from "./contents/CameraCtrl";
 
+const needEffect = false;
+
 function App() {
   const [sunCur, setSunCur] = useState<THREE.Mesh | null>(null);
   const [blur, setBlur] = useState(0.1);
@@ -35,13 +37,15 @@ function App() {
           }}
         />
 
-        <EffectComposer>
-          {sunCur ? (
-            <GodRays sun={sunCur} decay={0.8} exposure={1} blur={blur} />
-          ) : (
-            <></>
-          )}
-        </EffectComposer>
+        {needEffect && (
+          <EffectComposer>
+            {sunCur ? (
+              <GodRays sun={sunCur} decay={0.8} exposure={1} blur={blur} />
+            ) : (
+              <></>
+            )}
+          </EffectComposer>
+        )}
         {/* <primitive object={new THREE.AxesHelper(10)}></primitive> */}
         <OrbitControls />
         <TimeSystemControls />
