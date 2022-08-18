@@ -10,6 +10,7 @@ const radius = 1000,
   degDelta = 2,
   widthDelta = width / 5;
 const groundCenter: [number, number, number] = [-(width / 3), -10 - radius, 0];
+// const groundCenter: [number, number, number] = [0, 0, 0];
 
 interface IVertices {
   [index: string]: {
@@ -21,7 +22,7 @@ interface IVertices {
 
 function GroundMesh() {
   const groudMeshRef = React.useRef<THREE.Mesh>(null);
-  const treeGroupRef = React.useRef<THREE.Group>(null);
+
   const trees = React.useMemo(() => {
     const output: { rot: Euler; pos: Vector3; key: string }[] = [];
 
@@ -29,45 +30,24 @@ function GroundMesh() {
       return output;
     }
 
-    const positionAttribute =
-      groudMeshRef.current.geometry.getAttribute("position");
-    const point = new Vector3();
-    const visited = new Set();
-    const quaternion = new THREE.Quaternion();
+    const count = Math.floor(Math.random() * radius * 4);
+    const vec3 = new Vector3();
 
-    // https://stackoverflow.com/a/67865461/8356786
-    // Go thru all points and collect points on same vertex with a hashmap
-    for (let i = 0; i < positionAttribute.count; i += 0) {
-      point.fromBufferAttribute(positionAttribute, i);
+    for (let i = 0; i < count; i++) {
+      const phi = Math.random() * 2 * Math.PI;
+      const theta = Math.random() * 2 * Math.PI;
+      const pos = vec3.setFromSphericalCoords(radius, phi, theta).clone();
+      const rot = new Euler(phi, 0, theta);
 
-      const key = [point.x, point.y, point.z].join(",");
-      if (visited.has(key)) {
-        continue;
-      }
-      visited.add(key);
-      const pos = new Vector3(point.x, point.y, point.z);
-      const rot = new Euler();
       output.push({
-        key,
+        key: `tree_${i}`,
         pos,
         rot,
       });
-
-      i += Math.floor(Math.random() * 200 + 300);
     }
 
     return output;
   }, [groudMeshRef.current]);
-
-  React.useEffect(() => {
-    if (!treeGroupRef.current) {
-      return;
-    }
-
-    treeGroupRef.current.children.forEach((obj) => {
-      obj.lookAt(...groundCenter);
-    });
-  }, [treeGroupRef.current?.children]);
 
   return (
     <>
@@ -76,11 +56,13 @@ function GroundMesh() {
         <meshPhongMaterial color={0x6f9e72}></meshPhongMaterial>
       </mesh>
 
-      <group ref={treeGroupRef}>
-        {trees.map((treeConf) => (
-          <Tree key={`${treeConf.key}`} position={treeConf.pos}></Tree>
-        ))}
-      </group>
+      {trees.map((treeConf) => (
+        <Tree
+          key={`${treeConf.key}`}
+          position={treeConf.pos}
+          rotation={treeConf.rot}
+        ></Tree>
+      ))}
     </>
   );
 }

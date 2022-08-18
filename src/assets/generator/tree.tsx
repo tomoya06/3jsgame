@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { ThreeElements } from "@react-three/fiber";
 import * as React from "react";
 
-const scale = 0.1;
+const scale = 0.02;
 
 export default function Tree(props: ThreeElements["group"]) {
   const matTreeLeaves = React.useMemo(() => {
@@ -15,10 +15,10 @@ export default function Tree(props: ThreeElements["group"]) {
   return (
     <group>
       <group scale={[scale, scale, scale]} rotation={[0, 0, 0]} {...props}>
-        <mesh>
+        {/* <mesh>
           <meshBasicMaterial color={0x614719}></meshBasicMaterial>
           <boxGeometry args={[10, 20, 10]}></boxGeometry>
-        </mesh>
+        </mesh> */}
         <mesh material={matTreeLeaves} position={[0, 20, 0]}>
           <cylinderGeometry args={[1, 12 * 3, 12 * 3, 4]}></cylinderGeometry>
         </mesh>

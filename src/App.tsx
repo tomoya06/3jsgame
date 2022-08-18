@@ -24,7 +24,7 @@ function App() {
         style={{ zIndex: 2 }}
         camera={{ position: [-40, 10, 0], far: 400, fov: 50, near: 1 }}
       >
-        <fog attach="fog" args={[0xf7d9aa, 80, 240]} />
+        {/* <fog attach="fog" args={[0xf7d9aa, 80, 240]} /> */}
 
         <Sky />
         <Plane />
@@ -46,7 +46,7 @@ function App() {
             )}
           </EffectComposer>
         )}
-        {/* <primitive object={new THREE.AxesHelper(10)}></primitive> */}
+        <primitive object={new THREE.AxesHelper(10)}></primitive>
         <OrbitControls />
         <TimeSystemControls />
         <Stats />
