@@ -8,7 +8,10 @@ REACT-THREE 版
 
 ## 操控
 
-w 前进 s 后退 a 左倾 d 右倾 q 爬升 e 下坠
+- w 前进 s 后退 a 左倾 d 右倾
+- q 爬升 e 下坠
+- p 喷气加速
+- l 照射灯
 
 ## Road Map
 
