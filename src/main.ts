@@ -47,7 +47,7 @@ async function initGeneralHelper() {
     new THREE.MeshPhongMaterial({ color: 0xffffff }), // side
   ];
   const font = await new FontLoader().loadAsync(
-    "/assets/fonts/helvetiker_regular.typeface.json"
+    "https://tomoya06.github.io/3jsgame/assets/fonts/helvetiker_regular.typeface.json"
   );
   [
     [10, 0, 0],
@@ -73,7 +73,9 @@ let plane: Plane;
 
 async function initModels() {
   const [planeModel] = await Promise.all([
-    new GLTFLoader().loadAsync("/assets/models/cartoon_plane/scene.gltf"),
+    new GLTFLoader().loadAsync(
+      "https://tomoya06.github.io/3jsgame/assets/models/cartoon_plane/scene.gltf"
+    ),
   ]);
 
   plane = new Plane(planeModel);
