@@ -12,6 +12,7 @@ import {
   useKeyCtrl,
 } from "../system/keyctrl";
 import PlaneJet from "./PlaneJet";
+import { useControls } from "leva";
 
 const planeSize = 2;
 
@@ -37,8 +38,23 @@ export default function Plane() {
     return tp;
   }, [position]);
 
+  useControls("Controls", {
+    "wsad: movement": {
+      value: true,
+    },
+    "q/e: forward/backward": {
+      value: true,
+    },
+    "l: light": {
+      value: true,
+    },
+    "p: boost": {
+      value: true,
+    },
+  });
+
   const gltf = useGLTF(
-    "https://tomoya06.github.io/3jsgame/assets/models/cartoon_plane/scene.gltf"
+    "https://tomoya06.github.io/3jsgame/assets/cartoon_plane/scene.gltf"
   );
   const mixer = useMemo(() => new THREE.AnimationMixer(gltf.scene), [gltf]);
 
