@@ -37,7 +37,9 @@ export default function Plane() {
     return tp;
   }, [position]);
 
-  const gltf = useGLTF("src/assets/models/cartoon_plane/scene.gltf");
+  const gltf = useGLTF(
+    "https://tomoya06.github.io/3jsgame/assets/models/cartoon_plane/scene.gltf"
+  );
   const mixer = useMemo(() => new THREE.AnimationMixer(gltf.scene), [gltf]);
 
   useEffect(() => {

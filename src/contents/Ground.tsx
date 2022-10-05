@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { ThreeElements, useFrame } from "@react-three/fiber";
 import * as React from "react";
-import Tree from "../assets/generator/tree";
+import Tree from "../models/generator/tree";
 import { Euler, Quaternion, Vector3 } from "three";
 import worldspin from "../system/worldspin";
 

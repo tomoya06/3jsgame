@@ -42,10 +42,12 @@ const handleKeyDown = (keycode: number, flag: boolean) => {
     return;
   }
 
+  // l
   if (keycode === 76) {
     outerShowLight = !outerShowLight;
   }
 
+  // p
   if (keycode === 80 && !isKeyDisabled[keycode]) {
     isKeyDisabled[keycode] = true;
     worldspin.speedup();

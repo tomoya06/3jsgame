@@ -1,7 +1,7 @@
 import { useFrame } from "@react-three/fiber";
 import { useMemo, useRef } from "react";
 import * as THREE from "three";
-import Cloud from "../assets/generator/cloud";
+import Cloud from "../models/generator/cloud";
 import worldspin from "../system/worldspin";
 
 const radius = 1000,
