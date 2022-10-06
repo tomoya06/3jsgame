@@ -6,13 +6,18 @@ import Ground from "./contents/Ground";
 import { TimeSystemControls } from "./system/time";
 import Orbit from "./contents/Orbit";
 import Space from "./contents/Space";
-import { OrbitControls, Stats } from "@react-three/drei";
+import { Html, OrbitControls, Stats, useProgress } from "@react-three/drei";
 import StarSky from "./contents/StarSky";
 import { EffectComposer, GodRays } from "@react-three/postprocessing";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import CameraCtrl from "./contents/CameraCtrl";
 
 const needEffect = false;
+
+function Loader() {
+  const { active, progress, errors, item, loaded, total } = useProgress();
+  return <Html center>{progress} % loaded</Html>;
+}
 
 function App() {
   const [sunCur, setSunCur] = useState<THREE.Mesh | null>(null);
@@ -26,16 +31,18 @@ function App() {
       >
         {/* <fog attach="fog" args={[0xf7d9aa, 80, 240]} /> */}
 
-        <Sky />
-        <Plane />
-        <Ground />
-        <StarSky />
-        <Orbit
-          ref={(node) => {
-            setSunCur(node);
-            setBlur(0);
-          }}
-        />
+        <Suspense fallback={<Loader />}>
+          <Sky />
+          <Plane />
+          <Ground />
+          <StarSky />
+          <Orbit
+            ref={(node) => {
+              setSunCur(node);
+              setBlur(0);
+            }}
+          />
+        </Suspense>
 
         {needEffect && (
           <EffectComposer>

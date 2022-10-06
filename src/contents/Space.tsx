@@ -23,7 +23,7 @@ export default function Space() {
   }, []);
 
   useEffect(() => {
-    console.log(`curHour change`, curHour);
+    // console.log(`curHour change`, curHour);
     new TWEEN.Tween({ opa: 1 })
       .to({ opa: 0 }, 1000)
       .easing(TWEEN.Easing.Linear.None)

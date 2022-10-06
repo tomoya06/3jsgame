@@ -76,6 +76,9 @@ const animateLight = (position: TimePositionType, scene: THREE.Scene) => {
     lightAmb = "nightAmb";
     subAmb = "ambient";
   }
+  if (!lights) {
+    return;
+  }
   lights[lightKey].position.set(0, position.y, position.x).normalize();
   lights[lightKey].intensity = mj.times(position.heightPercent, 0.6);
   lights[subKey].intensity = 0;
