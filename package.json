@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "buildgh": "tsc && vite build --mode=github",
     "preview": "vite preview",
     "deploy": "node deploy"
   },

@@ -1,8 +1,6 @@
 import "./style.css";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
-import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
-import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
 import Stats from "stats.js";
 import { Sky } from "./models/sky";
 import { Ground } from "./models/ground";
@@ -11,6 +9,8 @@ import { Sun } from "./models/sun";
 import timeSystem from "./system/time";
 import Space from "./models/space";
 import BaseModel from "./models/base";
+import gltfUrl from "./assets/models/cartoon_plane/scene.gltf?url";
+import "./assets/models/cartoon_plane/scene.bin?url";
 
 /** 场景 & 相机 */
 const scene = new THREE.Scene();
@@ -40,29 +40,6 @@ async function initGeneralHelper() {
   // 红色代表 X 轴. 绿色代表 Y 轴. 蓝色代表 Z 轴.
   const axesHelper = new THREE.AxesHelper(5);
   scene.add(axesHelper);
-
-  // 打坐标轴
-  const fontMaterials = [
-    new THREE.MeshPhongMaterial({ color: 0xffffff, flatShading: true }), // front
-    new THREE.MeshPhongMaterial({ color: 0xffffff }), // side
-  ];
-  const font = await new FontLoader().loadAsync(
-    "https://tomoya06.github.io/3jsgame/assets/fonts/helvetiker_regular.typeface.json"
-  );
-  [
-    [10, 0, 0],
-    [0, 10, 0],
-    [0, 0, 10],
-  ].map((ord) => {
-    const geo = new TextGeometry(`[${ord.join(",")}]`, {
-      font,
-    });
-    const mesh = new THREE.Mesh(geo, fontMaterials);
-    mesh.position.set(ord[0], ord[1], ord[2]);
-    mesh.scale.set(0.001, 0.001, 0.001);
-    mesh.rotateY((-90 / 180) * Math.PI);
-    scene.add(mesh);
-  });
 }
 
 /** 灯光 */
@@ -72,11 +49,7 @@ const worldModels: BaseModel[] = [];
 let plane: Plane;
 
 async function initModels() {
-  const [planeModel] = await Promise.all([
-    new GLTFLoader().loadAsync(
-      "https://tomoya06.github.io/3jsgame/assets/models/cartoon_plane/scene.gltf"
-    ),
-  ]);
+  const [planeModel] = await Promise.all([new GLTFLoader().loadAsync(gltfUrl)]);
 
   plane = new Plane(planeModel);
 
