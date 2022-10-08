@@ -13,6 +13,8 @@ import {
 } from "../system/keyctrl";
 import PlaneJet from "./PlaneJet";
 import { useControls } from "leva";
+import gltfUrl from "../assets/cartoon_plane/scene.gltf?url";
+import "../assets/cartoon_plane/scene.bin?url";
 
 const planeSize = 2;
 
@@ -53,9 +55,7 @@ export default function Plane() {
     },
   });
 
-  const gltf = useGLTF(
-    "https://tomoya06.github.io/3jsgame/assets/cartoon_plane/scene.gltf"
-  );
+  const gltf = useGLTF(gltfUrl);
   const mixer = useMemo(() => new THREE.AnimationMixer(gltf.scene), [gltf]);
 
   useEffect(() => {

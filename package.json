@@ -6,8 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "buildgh": "tsc && vite build --mode=github",
     "preview": "vite preview",
-    "deploy": "gh-pages -d dist"
+    "deploy": "pnpm run buildgh && gh-pages -d dist"
   },
   "dependencies": {
     "@react-three/drei": "^9.19.5",
