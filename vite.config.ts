@@ -6,5 +6,19 @@ export default ({ mode }) => {
 
   return defineConfig({
     base,
+    build: {
+      rollupOptions: {
+        output: {
+          entryFileNames: `[name].[hash].js`,
+          chunkFileNames: `[name].[hash].js`,
+          assetFileNames: (chunk) => {
+            if (chunk.name?.endsWith(".bin") || chunk.name?.endsWith(".gltf")) {
+              return `assets/[name].[ext]`;
+            }
+            return `assets/[name].[hash].[ext]`;
+          },
+        },
+      },
+    },
   });
 };

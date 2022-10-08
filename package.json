@@ -7,7 +7,7 @@
     "build": "tsc && vite build",
     "buildgh": "tsc && vite build --mode=github",
     "preview": "vite preview",
-    "deploy": "node deploy"
+    "deploy": "pnpm run buildgh && gh-pages -d dist"
   },
   "devDependencies": {
     "@types/dat.gui": "^0.7.7",
